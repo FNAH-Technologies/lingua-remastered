@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { useNavigate } from 'react-router-dom';
-import { BookOpen, Trophy, Users, Settings, Flame, Star } from 'lucide-react';
+import { BookOpen, Trophy, Users, Settings, Flame, Star, Zap } from 'lucide-react';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -55,6 +55,15 @@ const Dashboard = () => {
           variant="ghost" 
           size="sm" 
           className="flex flex-col items-center space-y-1"
+          onClick={() => navigate('/challenges')}
+        >
+          <Zap className="w-5 h-5" />
+          <span className="text-xs">Défis</span>
+        </Button>
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          className="flex flex-col items-center space-y-1"
           onClick={() => navigate('/stories')}
         >
           <Star className="w-5 h-5" />
@@ -73,10 +82,10 @@ const Dashboard = () => {
           variant="ghost" 
           size="sm" 
           className="flex flex-col items-center space-y-1"
-          onClick={() => navigate('/profile')}
+          onClick={() => navigate('/settings')}
         >
           <Settings className="w-5 h-5" />
-          <span className="text-xs">Profil</span>
+          <span className="text-xs">Paramètres</span>
         </Button>
       </div>
     </div>
@@ -122,7 +131,10 @@ const Dashboard = () => {
           </CardHeader>
           <CardContent>
             <p className="text-gray-600 mb-3">Apprenez 5 nouveaux mots en Ewondo</p>
-            <Button className="bg-yellow-500 hover:bg-yellow-600 text-white">
+            <Button 
+              className="bg-yellow-500 hover:bg-yellow-600 text-white"
+              onClick={() => navigate('/challenges')}
+            >
               Commencer le défi
             </Button>
           </CardContent>
@@ -172,23 +184,23 @@ const Dashboard = () => {
         <div className="grid grid-cols-2 gap-4">
           <Card 
             className="cursor-pointer hover:shadow-md transition-shadow"
+            onClick={() => navigate('/challenges')}
+          >
+            <CardContent className="p-4 text-center">
+              <Zap className="w-8 h-8 text-yellow-500 mx-auto mb-2" />
+              <h3 className="font-semibold">Défis</h3>
+              <p className="text-sm text-gray-600">Challenges quotidiens</p>
+            </CardContent>
+          </Card>
+
+          <Card 
+            className="cursor-pointer hover:shadow-md transition-shadow"
             onClick={() => navigate('/stories')}
           >
             <CardContent className="p-4 text-center">
               <BookOpen className="w-8 h-8 text-green-500 mx-auto mb-2" />
               <h3 className="font-semibold">Histoires</h3>
               <p className="text-sm text-gray-600">Culture & Contes</p>
-            </CardContent>
-          </Card>
-
-          <Card 
-            className="cursor-pointer hover:shadow-md transition-shadow"
-            onClick={() => navigate('/leaderboard')}
-          >
-            <CardContent className="p-4 text-center">
-              <Users className="w-8 h-8 text-blue-500 mx-auto mb-2" />
-              <h3 className="font-semibold">Communauté</h3>
-              <p className="text-sm text-gray-600">Classements</p>
             </CardContent>
           </Card>
         </div>

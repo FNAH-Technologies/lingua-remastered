@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -13,12 +12,16 @@ import StoryHub from "./components/StoryHub";
 import Leaderboard from "./components/Leaderboard";
 import Profile from "./components/Profile";
 import NotFound from "./pages/NotFound";
+import OnboardingScreen from "./components/OnboardingScreen";
+import ChallengeHub from "./components/ChallengeHub";
+import Settings from "./components/Settings";
 
 const queryClient = new QueryClient();
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [needsOnboarding, setNeedsOnboarding] = useState(false);
 
   useEffect(() => {
     // Simulate app initialization
@@ -26,14 +29,29 @@ const App = () => {
       setIsLoading(false);
       // Check if user is authenticated (mock)
       const savedUser = localStorage.getItem('lingua_user');
+      const onboardingData = localStorage.getItem('lingua_onboarding');
+      
       setIsAuthenticated(!!savedUser);
+      setNeedsOnboarding(!!savedUser && !onboardingData);
     }, 2500);
 
     return () => clearTimeout(timer);
   }, []);
 
+  const handleOnboardingComplete = () => {
+    setNeedsOnboarding(false);
+  };
+
   if (isLoading) {
     return <SplashScreen />;
+  }
+
+  if (!isAuthenticated) {
+    return <LoginScreen onLogin={setIsAuthenticated} />;
+  }
+
+  if (needsOnboarding) {
+    return <OnboardingScreen onComplete={handleOnboardingComplete} />;
   }
 
   return (
@@ -43,18 +61,14 @@ const App = () => {
         <Sonner />
         <BrowserRouter>
           <Routes>
-            {!isAuthenticated ? (
-              <Route path="*" element={<LoginScreen onLogin={setIsAuthenticated} />} />
-            ) : (
-              <>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/lesson/:lessonId" element={<LessonScreen />} />
-                <Route path="/stories" element={<StoryHub />} />
-                <Route path="/leaderboard" element={<Leaderboard />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="*" element={<NotFound />} />
-              </>
-            )}
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/lesson/:lessonId" element={<LessonScreen />} />
+            <Route path="/stories" element={<StoryHub />} />
+            <Route path="/challenges" element={<ChallengeHub />} />
+            <Route path="/leaderboard" element={<Leaderboard />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
