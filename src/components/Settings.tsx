@@ -7,11 +7,13 @@ import { Slider } from '@/components/ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { ArrowLeft, Bell, Volume2, Globe, Target, Shield, Info, LogOut } from 'lucide-react';
 
 const Settings = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t, language, setLanguage } = useLanguage();
   const [user, setUser] = useState<any>(null);
   const [settings, setSettings] = useState({
     notifications: true,
@@ -19,8 +21,7 @@ const Settings = () => {
     lessonReminders: true,
     streakReminders: true,
     volume: [80],
-    dailyGoal: [15],
-    interfaceLanguage: 'fr'
+    dailyGoal: [15]
   });
 
   useEffect(() => {
@@ -38,8 +39,8 @@ const Settings = () => {
   const saveSettings = () => {
     localStorage.setItem('lingua_settings', JSON.stringify(settings));
     toast({
-      title: "Paramètres sauvegardés",
-      description: "Vos préférences ont été mises à jour",
+      title: t('settings.saved'),
+      description: t('settings.saved.desc'),
     });
   };
 
@@ -47,8 +48,8 @@ const Settings = () => {
     localStorage.removeItem('lingua_user');
     localStorage.removeItem('lingua_settings');
     toast({
-      title: "Déconnecté",
-      description: "À bientôt!",
+      title: t('settings.logout.success'),
+      description: t('settings.logout.desc'),
     });
     navigate('/');
     window.location.reload();
@@ -71,9 +72,9 @@ const Settings = () => {
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
-          <h1 className="text-2xl font-bold">Paramètres</h1>
+          <h1 className="text-2xl font-bold">{t('settings.title')}</h1>
         </div>
-        <p className="opacity-90">Personnalisez votre expérience Lingua</p>
+        <p className="opacity-90">{t('settings.subtitle')}</p>
       </div>
 
       {/* Content */}
@@ -83,14 +84,14 @@ const Settings = () => {
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <Bell className="w-5 h-5" />
-              <span>Notifications</span>
+              <span>{t('settings.notifications')}</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex justify-between items-center">
               <div>
-                <p className="font-medium">Notifications générales</p>
-                <p className="text-sm text-gray-600">Recevoir les notifications de l'app</p>
+                <p className="font-medium">{t('settings.notifications.general')}</p>
+                <p className="text-sm text-gray-600">{t('settings.notifications.general.desc')}</p>
               </div>
               <Switch
                 checked={settings.notifications}
@@ -99,8 +100,8 @@ const Settings = () => {
             </div>
             <div className="flex justify-between items-center">
               <div>
-                <p className="font-medium">Rappels de leçons</p>
-                <p className="text-sm text-gray-600">Rappel quotidien d'apprentissage</p>
+                <p className="font-medium">{t('settings.notifications.lessons')}</p>
+                <p className="text-sm text-gray-600">{t('settings.notifications.lessons.desc')}</p>
               </div>
               <Switch
                 checked={settings.lessonReminders}
@@ -109,8 +110,8 @@ const Settings = () => {
             </div>
             <div className="flex justify-between items-center">
               <div>
-                <p className="font-medium">Alertes de série</p>
-                <p className="text-sm text-gray-600">Alerte avant de perdre votre série</p>
+                <p className="font-medium">{t('settings.notifications.streak')}</p>
+                <p className="text-sm text-gray-600">{t('settings.notifications.streak.desc')}</p>
               </div>
               <Switch
                 checked={settings.streakReminders}
@@ -125,14 +126,14 @@ const Settings = () => {
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <Volume2 className="w-5 h-5" />
-              <span>Audio</span>
+              <span>{t('settings.audio')}</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex justify-between items-center">
               <div>
-                <p className="font-medium">Effets sonores</p>
-                <p className="text-sm text-gray-600">Sons d'interface et de réussite</p>
+                <p className="font-medium">{t('settings.audio.effects')}</p>
+                <p className="text-sm text-gray-600">{t('settings.audio.effects.desc')}</p>
               </div>
               <Switch
                 checked={settings.soundEffects}
@@ -141,7 +142,7 @@ const Settings = () => {
             </div>
             <div>
               <div className="flex justify-between items-center mb-2">
-                <p className="font-medium">Volume</p>
+                <p className="font-medium">{t('settings.audio.volume')}</p>
                 <span className="text-sm text-gray-600">{settings.volume[0]}%</span>
               </div>
               <Slider
@@ -160,13 +161,13 @@ const Settings = () => {
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <Target className="w-5 h-5" />
-              <span>Apprentissage</span>
+              <span>{t('settings.learning')}</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
               <div className="flex justify-between items-center mb-2">
-                <p className="font-medium">Objectif quotidien</p>
+                <p className="font-medium">{t('settings.learning.goal')}</p>
                 <span className="text-sm text-gray-600">{settings.dailyGoal[0]} min</span>
               </div>
               <Slider
@@ -185,18 +186,18 @@ const Settings = () => {
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <Globe className="w-5 h-5" />
-              <span>Langue</span>
+              <span>{t('settings.language')}</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex justify-between items-center">
               <div>
-                <p className="font-medium">Langue de l'interface</p>
-                <p className="text-sm text-gray-600">Langue de navigation de l'app</p>
+                <p className="font-medium">{t('settings.language.interface')}</p>
+                <p className="text-sm text-gray-600">{t('settings.language.interface.desc')}</p>
               </div>
               <Select
-                value={settings.interfaceLanguage}
-                onValueChange={(value) => updateSetting('interfaceLanguage', value)}
+                value={language}
+                onValueChange={(value: 'fr' | 'en') => setLanguage(value)}
               >
                 <SelectTrigger className="w-32">
                   <SelectValue />
@@ -215,17 +216,17 @@ const Settings = () => {
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <Shield className="w-5 h-5" />
-              <span>Compte</span>
+              <span>{t('settings.account')}</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <Button variant="outline" className="w-full justify-start">
               <Shield className="w-4 h-4 mr-2" />
-              Changer le mot de passe
+              {t('settings.account.password')}
             </Button>
             <Button variant="outline" className="w-full justify-start">
               <Info className="w-4 h-4 mr-2" />
-              Confidentialité et données
+              {t('settings.account.privacy')}
             </Button>
           </CardContent>
         </Card>
@@ -233,7 +234,7 @@ const Settings = () => {
         {/* Actions */}
         <div className="space-y-3">
           <Button onClick={saveSettings} className="w-full bg-lingua-gradient hover:opacity-90 text-white">
-            Sauvegarder les paramètres
+            {t('settings.save')}
           </Button>
           <Button
             variant="destructive"
@@ -241,7 +242,7 @@ const Settings = () => {
             className="w-full flex items-center justify-center space-x-2"
           >
             <LogOut className="w-4 h-4" />
-            <span>Se déconnecter</span>
+            <span>{t('common.logout')}</span>
           </Button>
         </div>
 

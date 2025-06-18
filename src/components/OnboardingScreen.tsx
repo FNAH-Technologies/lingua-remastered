@@ -1,16 +1,17 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { ChevronLeft, ChevronRight, BookOpen, Target, Users } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface OnboardingScreenProps {
   onComplete: () => void;
 }
 
 const OnboardingScreen = ({ onComplete }: OnboardingScreenProps) => {
+  const { t } = useLanguage();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [selectedLanguage, setSelectedLanguage] = useState('');
   const [dailyGoal, setDailyGoal] = useState([15]);
@@ -28,21 +29,21 @@ const OnboardingScreen = ({ onComplete }: OnboardingScreenProps) => {
 
   const slides = [
     {
-      title: 'Bienvenue dans Lingua',
-      subtitle: 'Découvrez les langues du Cameroun',
-      description: 'Apprenez les langues camerounaises à travers des histoires, des défis et des leçons interactives.',
+      title: t('onboarding.welcome.title'),
+      subtitle: t('onboarding.welcome.subtitle'),
+      description: t('onboarding.welcome.description'),
       icon: BookOpen,
       content: null
     },
     {
-      title: 'Choisissez votre langue',
-      subtitle: 'Quelle langue souhaitez-vous apprendre?',
-      description: 'Sélectionnez la langue camerounaise qui vous intéresse le plus.',
+      title: t('onboarding.language.title'),
+      subtitle: t('onboarding.language.subtitle'),
+      description: t('onboarding.language.description'),
       icon: Users,
       content: (
         <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
           <SelectTrigger className="w-full">
-            <SelectValue placeholder="Sélectionnez une langue" />
+            <SelectValue placeholder={t('onboarding.language.placeholder')} />
           </SelectTrigger>
           <SelectContent>
             {languages.map((lang) => (
@@ -55,15 +56,15 @@ const OnboardingScreen = ({ onComplete }: OnboardingScreenProps) => {
       )
     },
     {
-      title: 'Définissez votre objectif',
-      subtitle: 'Combien de minutes par jour?',
-      description: 'Choisissez un objectif d\'apprentissage quotidien réaliste.',
+      title: t('onboarding.goal.title'),
+      subtitle: t('onboarding.goal.subtitle'),
+      description: t('onboarding.goal.description'),
       icon: Target,
       content: (
         <div className="space-y-4">
           <div className="text-center">
             <span className="text-3xl font-bold text-orange-500">{dailyGoal[0]}</span>
-            <span className="text-lg ml-2">minutes/jour</span>
+            <span className="text-lg ml-2">{t('common.minutes')}/{t('common.day')}</span>
           </div>
           <Slider
             value={dailyGoal}
@@ -161,7 +162,7 @@ const OnboardingScreen = ({ onComplete }: OnboardingScreenProps) => {
               className="flex items-center space-x-2"
             >
               <ChevronLeft className="w-4 h-4" />
-              <span>Retour</span>
+              <span>{t('common.back')}</span>
             </Button>
 
             <Button
@@ -169,7 +170,7 @@ const OnboardingScreen = ({ onComplete }: OnboardingScreenProps) => {
               disabled={!canProceed()}
               className="bg-lingua-gradient hover:opacity-90 text-white flex items-center space-x-2"
             >
-              <span>{currentSlide === slides.length - 1 ? 'Commencer' : 'Suivant'}</span>
+              <span>{currentSlide === slides.length - 1 ? t('common.start') : t('common.next')}</span>
               <ChevronRight className="w-4 h-4" />
             </Button>
           </div>
