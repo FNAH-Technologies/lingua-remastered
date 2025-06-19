@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -130,9 +131,27 @@ const OnboardingScreen = ({ onComplete }: OnboardingScreenProps) => {
 
           {/* Content */}
           <div className="text-center space-y-6">
-            <div className="w-16 h-16 mx-auto bg-lingua-gradient rounded-full flex items-center justify-center">
-              <IconComponent className="w-8 h-8 text-white" />
-            </div>
+            {/* Logo with bubble container for welcome slide */}
+            {currentSlide === 0 ? (
+              <div className="w-20 h-20 mx-auto relative">
+                <div className="w-full h-full bg-orange-100 backdrop-blur-sm rounded-full flex items-center justify-center border border-orange-200 shadow-lg">
+                  <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center p-1">
+                    <img 
+                      src="/lovable-uploads/54bc6f2e-b470-42a0-a685-de2f6c1f6398.png" 
+                      alt="Lingua Logo" 
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                </div>
+                {/* Small floating bubbles */}
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-orange-200 rounded-full animate-pulse"></div>
+                <div className="absolute top-2 -left-2 w-2 h-2 bg-orange-300 rounded-full animate-pulse" style={{animationDelay: '0.5s'}}></div>
+              </div>
+            ) : (
+              <div className="w-16 h-16 mx-auto bg-lingua-gradient rounded-full flex items-center justify-center">
+                <IconComponent className="w-8 h-8 text-white" />
+              </div>
+            )}
 
             <div>
               <h1 className="text-2xl font-bold text-gray-800 mb-2">
