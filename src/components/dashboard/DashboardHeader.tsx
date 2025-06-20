@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Flame, Star } from 'lucide-react';
+import { Flame, Star, Bell, Settings } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import LogoBubble from '../LogoBubble';
 
@@ -16,33 +16,60 @@ const DashboardHeader = ({ streak, xp, level }: DashboardHeaderProps) => {
   const navigate = useNavigate();
 
   return (
-    <div className="bg-white/90 backdrop-blur-md border-b border-gray-100/50 p-3 sm:p-4 shadow-sm">
-      <div className="flex items-center justify-between max-w-6xl mx-auto">
-        <div className="flex items-center space-x-2 sm:space-x-3">
-          <LogoBubble size="sm" />
-          <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent">
-            Lingua
-          </h1>
+    <div className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
+      <div className="px-4 py-3">
+        {/* Top row with logo and notifications */}
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center space-x-3">
+            <LogoBubble size="sm" />
+            <div>
+              <h1 className="text-xl font-bold text-gray-900">Lingua</h1>
+              <p className="text-xs text-gray-500">Learn Cameroonian Languages</p>
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="p-2 rounded-full"
+            >
+              <Bell className="w-5 h-5 text-gray-600" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate('/settings')}
+              className="p-2 rounded-full"
+            >
+              <Settings className="w-5 h-5 text-gray-600" />
+            </Button>
+          </div>
         </div>
 
-        <div className="flex items-center space-x-2 sm:space-x-4">
-          <div className="flex items-center space-x-1 sm:space-x-2 bg-orange-50 px-3 py-1 rounded-full">
-            <Flame className="w-4 h-4 sm:w-5 sm:h-5 text-orange-500" />
-            <span className="font-semibold text-orange-600 text-sm sm:text-base">{streak}</span>
+        {/* Stats row */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 bg-orange-50 px-3 py-2 rounded-full">
+              <Flame className="w-4 h-4 text-orange-500" />
+              <span className="font-bold text-orange-600 text-sm">{streak}</span>
+              <span className="text-xs text-orange-500">day streak</span>
+            </div>
+            
+            <div className="flex items-center space-x-2 bg-purple-50 px-3 py-2 rounded-full">
+              <Star className="w-4 h-4 text-purple-500" />
+              <span className="font-bold text-purple-600 text-sm">{xp}</span>
+              <span className="text-xs text-purple-500">XP</span>
+            </div>
           </div>
-          
-          <Badge variant="secondary" className="bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 text-xs sm:text-sm border-0">
-            <Star className="w-3 h-3 mr-1" />
-            {xp} XP
-          </Badge>
 
           <Button
             variant="ghost"
             size="sm"
             onClick={() => navigate('/profile')}
-            className="p-1 sm:p-2 hover:bg-gray-50"
+            className="p-0 rounded-full"
           >
-            <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center text-white font-semibold text-xs sm:text-sm shadow-md">
+            <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-md">
               {level}
             </div>
           </Button>

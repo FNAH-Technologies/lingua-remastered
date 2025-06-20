@@ -3,7 +3,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Lingua App - Cameroonian Cultural Theme */
+/* Modern Android App Styling */
 
 @layer base {
   :root {
@@ -35,14 +35,7 @@
     --input: 39 30% 90%;
     --ring: 24 100% 50%;
 
-    --radius: 0.75rem;
-
-    /* Custom Lingua colors */
-    --lingua-orange: 24 100% 50%;
-    --lingua-red: 15 100% 55%;
-    --lingua-green: 120 60% 40%;
-    --lingua-yellow: 45 100% 60%;
-    --lingua-brown: 30 50% 30%;
+    --radius: 1rem;
   }
 
   .dark {
@@ -75,11 +68,20 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Mobile-first responsive design */
+  @media (max-width: 768px) {
+    body {
+      font-size: 14px;
+    }
   }
 }
 
-/* Custom animations for Lingua */
+/* Custom animations for modern mobile feel */
 @keyframes bounce-in {
   0% { transform: scale(0.3); opacity: 0; }
   50% { transform: scale(1.05); }
@@ -88,24 +90,73 @@
 }
 
 @keyframes slide-up {
-  from { transform: translateY(100%); opacity: 0; }
+  from { transform: translateY(20px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 5px rgba(255, 165, 0, 0.5); }
-  50% { box-shadow: 0 0 20px rgba(255, 165, 0, 0.8); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
+  50% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-5px); }
 }
 
 .animate-bounce-in { animation: bounce-in 0.6s ease-out; }
-.animate-slide-up { animation: slide-up 0.5s ease-out; }
+.animate-slide-up { animation: slide-up 0.4s ease-out; }
 .animate-pulse-glow { animation: pulse-glow 2s infinite; }
+.animate-float { animation: float 3s ease-in-out infinite; }
 
-/* Gradient backgrounds */
-.bg-lingua-gradient {
-  background: linear-gradient(135deg, hsl(var(--lingua-orange)) 0%, hsl(var(--lingua-red)) 100%);
+/* Android Material Design shadows */
+.shadow-material-1 { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
+.shadow-material-2 { box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23); }
+.shadow-material-3 { box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23); }
+
+/* Enhanced ripple effect for buttons */
+.ripple {
+  position: relative;
+  overflow: hidden;
+  transform: translate3d(0, 0, 0);
 }
 
-.bg-cultura-gradient {
-  background: linear-gradient(135deg, hsl(var(--lingua-green)) 0%, hsl(var(--lingua-yellow)) 100%);
+.ripple:before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.ripple:active:before {
+  width: 300px;
+  height: 300px;
+}
+
+/* Mobile touch improvements */
+@media (hover: none) and (pointer: coarse) {
+  .hover\:scale-105:hover {
+    transform: scale(1);
+  }
+  
+  .active\:scale-95:active {
+    transform: scale(0.95);
+  }
+}
+
+/* Safe area handling for mobile */
+@supports (padding: env(safe-area-inset-top)) {
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 }
