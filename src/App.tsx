@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -11,7 +10,7 @@ import LoginScreen from "./components/LoginScreen";
 import Dashboard from "./components/Dashboard";
 import LessonScreen from "./components/LessonScreen";
 import StoryHub from "./components/StoryHub";
-import Leaderboard from "./components/Leaderboard";
+import EnhancedLeaderboard from "./components/EnhancedLeaderboard";
 import Profile from "./components/Profile";
 import NotFound from "./pages/NotFound";
 import OnboardingScreen from "./components/OnboardingScreen";
@@ -76,7 +75,7 @@ const App = () => {
               <Route path="/lesson/:lessonId" element={<LessonScreen />} />
               <Route path="/stories" element={<StoryHub />} />
               <Route path="/challenges" element={<ChallengeHub />} />
-              <Route path="/leaderboard" element={<Leaderboard />} />
+              <Route path="/leaderboard" element={<EnhancedLeaderboard />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="*" element={<NotFound />} />
