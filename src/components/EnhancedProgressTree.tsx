@@ -112,7 +112,7 @@ const EnhancedProgressTree = () => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {lessons.map((lesson, index) => {
         const IconComponent = lesson.icon;
         const progressPercentage = (lesson.completedLessons / lesson.lessonsCount) * 100;
@@ -120,17 +120,17 @@ const EnhancedProgressTree = () => {
         return (
           <Card 
             key={lesson.id}
-            className={`border-0 shadow-sm rounded-2xl overflow-hidden transition-all duration-200 ${
+            className={`border-0 shadow-sm rounded-2xl overflow-hidden transition-all duration-300 transform ${
               lesson.status === 'locked' 
                 ? 'opacity-60 cursor-not-allowed' 
-                : 'cursor-pointer hover:shadow-md active:scale-95'
+                : 'cursor-pointer hover:shadow-md hover:scale-[1.02] active:scale-[0.98]'
             }`}
             onClick={() => handleLessonClick(lesson)}
           >
             <CardContent className={`p-4 bg-gradient-to-r ${lesson.status === 'locked' ? 'from-gray-50 to-gray-100' : lesson.bgColor}`}>
               <div className="flex items-center space-x-4">
                 {/* Icon Container */}
-                <div className="relative">
+                <div className="relative flex-shrink-0">
                   <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg ${
                     lesson.status === 'locked'
                       ? 'bg-gray-300'
@@ -152,13 +152,13 @@ const EnhancedProgressTree = () => {
                 </div>
 
                 {/* Content */}
-                <div className="flex-1">
+                <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-bold text-gray-900 text-sm">
+                    <h3 className="font-bold text-gray-900 text-sm truncate">
                       {language === 'fr' ? lesson.titleFr : lesson.title}
                     </h3>
                     {lesson.status !== 'locked' && (
-                      <div className="flex space-x-0.5">
+                      <div className="flex space-x-0.5 ml-2 flex-shrink-0">
                         {Array.from({ length: lesson.maxStars }, (_, i) => (
                           <Star
                             key={i}
@@ -189,7 +189,7 @@ const EnhancedProgressTree = () => {
                       
                       <Badge 
                         variant="secondary" 
-                        className={`text-xs ${
+                        className={`text-xs px-2 py-0.5 ${
                           lesson.status === 'completed' 
                             ? 'bg-green-100 text-green-700' 
                             : 'bg-blue-100 text-blue-700'
@@ -212,7 +212,7 @@ const EnhancedProgressTree = () => {
 
                 {/* Play/Action Button */}
                 {lesson.status !== 'locked' && (
-                  <div className="w-8 h-8 bg-white/80 rounded-full flex items-center justify-center shadow-md">
+                  <div className="w-10 h-10 bg-white/80 rounded-full flex items-center justify-center shadow-md flex-shrink-0">
                     <Play className="w-4 h-4 text-gray-700" />
                   </div>
                 )}

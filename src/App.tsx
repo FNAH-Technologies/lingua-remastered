@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -32,12 +33,22 @@ const App = () => {
       const savedUser = localStorage.getItem('lingua_user');
       const onboardingData = localStorage.getItem('lingua_onboarding');
       
-      setIsAuthenticated(!!savedUser);
-      setNeedsOnboarding(!!savedUser && !onboardingData);
+      if (savedUser) {
+        setIsAuthenticated(true);
+        // Check if onboarding is needed
+        setNeedsOnboarding(!onboardingData);
+      }
     }, 2500);
 
     return () => clearTimeout(timer);
   }, []);
+
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+    // Check if user needs onboarding
+    const onboardingData = localStorage.getItem('lingua_onboarding');
+    setNeedsOnboarding(!onboardingData);
+  };
 
   const handleOnboardingComplete = () => {
     setNeedsOnboarding(false);
@@ -50,7 +61,7 @@ const App = () => {
   if (!isAuthenticated) {
     return (
       <LanguageProvider>
-        <LoginScreen onLogin={setIsAuthenticated} />
+        <LoginScreen onLogin={handleLogin} />
       </LanguageProvider>
     );
   }
