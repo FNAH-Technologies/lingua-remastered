@@ -1,212 +1,270 @@
 
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Play, BookOpen, Clock, Users } from 'lucide-react';
+import { BookOpen, Clock, Star, Play, Lock, Volume2, Users } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
+import Header from './Header';
 
 const StoryHub = () => {
   const navigate = useNavigate();
-  const [selectedStory, setSelectedStory] = useState<number | null>(null);
+  const { language } = useLanguage();
+  const [selectedLevel, setSelectedLevel] = useState<'beginner' | 'intermediate' | 'advanced'>('beginner');
 
-  const stories = [
-    {
-      id: 1,
-      title: 'La Tortue et l\'Éléphant',
-      language: 'Ewondo',
-      duration: '8 min',
-      difficulty: 'Débutant',
-      description: 'Un conte traditionnel sur la sagesse et la patience',
-      cultural_note: 'Ce conte enseigne l\'importance de la persévérance dans la culture ewondo',
-      thumbnail: '🐢',
-      audio_available: true
-    },
-    {
-      id: 2,
-      title: 'Le Roi des Pygmées',
-      language: 'Baka',
-      duration: '12 min',
-      difficulty: 'Intermédiaire',
-      description: 'L\'histoire du petit roi sage de la forêt',
-      cultural_note: 'Légende qui explique l\'harmonie entre les Baka et la nature',
-      thumbnail: '👑',
-      audio_available: true
-    },
-    {
-      id: 3,
-      title: 'La Danseuse du Mandara',
-      language: 'Fulfuldé',
-      duration: '15 min',
-      difficulty: 'Avancé',
-      description: 'Romance épique dans les montagnes du Nord',
-      cultural_note: 'Histoire qui célèbre les traditions peules du Cameroun',
-      thumbnail: '💃',
-      audio_available: false
+  const stories = {
+    beginner: [
+      {
+        id: 1,
+        title: language === 'fr' ? 'Le Marché de Douala' : 'Douala Market',
+        description: language === 'fr' ? 'Une histoire simple sur un voyage au marché local' : 'A simple story about a trip to the local market',
+        duration: '5 min',
+        difficulty: 'Débutant',
+        stars: 3,
+        isLocked: false,
+        image: '🏪',
+        progress: 100
+      },
+      {
+        id: 2,
+        title: language === 'fr' ? 'La Famille Camerounaise' : 'The Cameroonian Family',
+        description: language === 'fr' ? 'Rencontrez une famille traditionnelle du Cameroun' : 'Meet a traditional Cameroonian family',
+        duration: '7 min',
+        difficulty: 'Débutant',
+        stars: 2,
+        isLocked: false,
+        image: '👨‍👩‍👧‍👦',
+        progress: 60
+      },
+      {
+        id: 3,
+        title: language === 'fr' ? 'Le Festival de Ngondo' : 'Ngondo Festival',
+        description: language === 'fr' ? 'Découvrez la culture traditionnelle sawa' : 'Discover traditional Sawa culture',
+        duration: '6 min',
+        difficulty: 'Débutant',
+        stars: 0,
+        isLocked: true,
+        image: '🎭',
+        progress: 0
+      }
+    ],
+    intermediate: [
+      {
+        id: 4,
+        title: language === 'fr' ? 'L\'Aventure en Forêt' : 'Forest Adventure',
+        description: language === 'fr' ? 'Une exploration de la forêt tropicale' : 'An exploration of the tropical rainforest',
+        duration: '10 min',
+        difficulty: 'Intermédiaire',
+        stars: 1,
+        isLocked: false,
+        image: '🌲',
+        progress: 30
+      },
+      {
+        id: 5,
+        title: language === 'fr' ? 'Le Commerce à Yaoundé' : 'Business in Yaoundé',
+        description: language === 'fr' ? 'Apprenez le vocabulaire du commerce' : 'Learn business vocabulary',
+        duration: '12 min',
+        difficulty: 'Intermédiaire',
+        stars: 0,
+        isLocked: true,
+        image: '🏢',
+        progress: 0
+      }
+    ],
+    advanced: [
+      {
+        id: 6,
+        title: language === 'fr' ? 'Histoire du Cameroun' : 'History of Cameroon',
+        description: language === 'fr' ? 'Explorez l\'histoire riche du pays' : 'Explore the rich history of the country',
+        duration: '15 min',
+        difficulty: 'Avancé',
+        stars: 0,
+        isLocked: true,
+        image: '📚',
+        progress: 0
+      }
+    ]
+  };
+
+  const currentStories = stories[selectedLevel];
+
+  const handleStoryClick = (story: any) => {
+    if (!story.isLocked) {
+      // Navigate to story reader
+      console.log('Opening story:', story.id);
     }
-  ];
+  };
 
-  const StoryModal = ({ story }: { story: any }) => (
-    <div className="fixed inset-0 bg-black/50 flex items-end z-50">
-      <div className="bg-white rounded-t-3xl w-full max-h-[80vh] animate-slide-up">
-        <div className="p-6">
-          <div className="w-12 h-1 bg-gray-300 rounded-full mx-auto mb-6"></div>
-          
-          <div className="flex items-start space-x-4 mb-6">
-            <div className="text-6xl">{story.thumbnail}</div>
-            <div className="flex-1">
-              <h2 className="text-2xl font-bold mb-2">{story.title}</h2>
-              <div className="flex items-center space-x-3 mb-3">
-                <Badge variant="secondary">{story.language}</Badge>
-                <Badge variant="outline">{story.difficulty}</Badge>
-              </div>
-              <div className="flex items-center space-x-4 text-sm text-gray-600">
-                <div className="flex items-center space-x-1">
-                  <Clock className="w-4 h-4" />
-                  <span>{story.duration}</span>
-                </div>
-                <div className="flex items-center space-x-1">
-                  <Users className="w-4 h-4" />
-                  <span>2.3k vues</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <p className="text-gray-700 mb-4">{story.description}</p>
-          
-          <div className="bg-orange-50 p-4 rounded-lg mb-6">
-            <h3 className="font-semibold text-orange-800 mb-2">Note culturelle</h3>
-            <p className="text-orange-700 text-sm">{story.cultural_note}</p>
-          </div>
-
-          <div className="flex space-x-3">
-            <Button 
-              className="flex-1 bg-lingua-gradient text-white"
-              disabled={!story.audio_available}
-            >
-              <Play className="w-4 h-4 mr-2" />
-              {story.audio_available ? 'Écouter' : 'Audio bientôt'}
-            </Button>
-            <Button variant="outline" className="flex-1">
-              <BookOpen className="w-4 h-4 mr-2" />
-              Lire
-            </Button>
-          </div>
-
-          <Button
-            variant="ghost"
-            onClick={() => setSelectedStory(null)}
-            className="w-full mt-4"
-          >
-            Fermer
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
+  const playAudio = (story: any, event: React.MouseEvent) => {
+    event.stopPropagation();
+    console.log('Playing audio for story:', story.id);
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
-      {/* Header */}
-      <div className="bg-cultura-gradient text-white p-6 rounded-b-3xl">
-        <div className="flex items-center space-x-4 mb-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate('/')}
-            className="text-white hover:bg-white/20 p-2"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
-          <h1 className="text-2xl font-bold">Histoires & Culture</h1>
-        </div>
-        <p className="opacity-90">Découvrez les contes traditionnels du Cameroun</p>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50">
+      <Header 
+        title={language === 'fr' ? 'Histoires' : 'Stories'}
+        showBack={true}
+      />
 
-      {/* Content */}
-      <div className="p-6 space-y-6">
-        {/* Featured Story */}
-        <Card className="animate-bounce-in">
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <span className="text-2xl">⭐</span>
-              <span>Histoire du jour</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center space-x-4">
-              <div className="text-4xl">{stories[0].thumbnail}</div>
-              <div className="flex-1">
-                <h3 className="font-semibold">{stories[0].title}</h3>
-                <p className="text-sm text-gray-600">{stories[0].description}</p>
-                <Badge variant="secondary" className="mt-2">{stories[0].language}</Badge>
-              </div>
-            </div>
-            <Button 
-              className="w-full mt-4 bg-green-500 hover:bg-green-600"
-              onClick={() => setSelectedStory(stories[0].id)}
+      <div className="p-4 max-w-4xl mx-auto">
+        {/* Level Selector */}
+        <div className="flex p-1 bg-white/80 backdrop-blur-sm rounded-xl mb-6 shadow-sm">
+          {[
+            { key: 'beginner', label: language === 'fr' ? 'Débutant' : 'Beginner' },
+            { key: 'intermediate', label: language === 'fr' ? 'Intermédiaire' : 'Intermediate' },
+            { key: 'advanced', label: language === 'fr' ? 'Avancé' : 'Advanced' }
+          ].map((level) => (
+            <Button
+              key={level.key}
+              variant={selectedLevel === level.key ? 'default' : 'ghost'}
+              className={`flex-1 transition-all duration-300 ${
+                selectedLevel === level.key 
+                  ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-md' 
+                  : 'text-gray-600 hover:bg-white/60'
+              }`}
+              onClick={() => setSelectedLevel(level.key as any)}
             >
-              Découvrir
+              {level.label}
             </Button>
-          </CardContent>
-        </Card>
+          ))}
+        </div>
 
-        {/* Stories List */}
-        <div>
-          <h2 className="text-xl font-bold mb-4">Toutes les histoires</h2>
-          <div className="space-y-4">
-            {stories.map((story, index) => (
-              <Card 
-                key={story.id} 
-                className="cursor-pointer hover:shadow-md transition-all animate-slide-up"
-                style={{ animationDelay: `${index * 0.1}s` }}
-                onClick={() => setSelectedStory(story.id)}
-              >
-                <CardContent className="p-4">
-                  <div className="flex items-center space-x-4">
-                    <div className="text-3xl">{story.thumbnail}</div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold mb-1">{story.title}</h3>
-                      <p className="text-sm text-gray-600 mb-2">{story.description}</p>
+        {/* Stories Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {currentStories.map((story) => (
+            <Card 
+              key={story.id}
+              className={`transition-all duration-300 hover:shadow-xl hover:scale-105 cursor-pointer border-0 bg-white/90 backdrop-blur-sm ${
+                story.isLocked ? 'opacity-60' : ''
+              }`}
+              onClick={() => handleStoryClick(story)}
+            >
+              <CardHeader className="pb-3">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="text-3xl">{story.image}</div>
+                    <div>
+                      <CardTitle className="text-lg font-bold text-gray-800 mb-1">
+                        {story.title}
+                      </CardTitle>
                       <div className="flex items-center space-x-2">
-                        <Badge variant="secondary" className="text-xs">{story.language}</Badge>
-                        <Badge variant="outline" className="text-xs">{story.difficulty}</Badge>
-                        <span className="text-xs text-gray-500 flex items-center space-x-1">
+                        <Badge variant="outline" className="text-xs">
+                          {story.difficulty}
+                        </Badge>
+                        <div className="flex items-center space-x-1 text-xs text-gray-500">
                           <Clock className="w-3 h-3" />
                           <span>{story.duration}</span>
-                        </span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                  
+                  {story.isLocked ? (
+                    <Lock className="w-5 h-5 text-gray-400" />
+                  ) : (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={(e) => playAudio(story, e)}
+                      className="p-1 hover:bg-blue-100"
+                    >
+                      <Volume2 className="w-4 h-4 text-blue-500" />
+                    </Button>
+                  )}
+                </div>
+              </CardHeader>
+              
+              <CardContent className="space-y-4">
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  {story.description}
+                </p>
+                
+                {!story.isLocked && (
+                  <>
+                    {/* Progress Bar */}
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center text-xs">
+                        <span className="text-gray-500">
+                          {language === 'fr' ? 'Progression' : 'Progress'}
+                        </span>
+                        <span className="font-medium text-gray-700">{story.progress}%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className="bg-gradient-to-r from-purple-400 to-pink-500 h-2 rounded-full transition-all duration-700"
+                          style={{ width: `${story.progress}%` }}
+                        />
+                      </div>
+                    </div>
+                    
+                    {/* Stars */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex space-x-1">
+                        {Array.from({ length: 3 }, (_, i) => (
+                          <Star
+                            key={i}
+                            className={`w-4 h-4 ${
+                              i < story.stars 
+                                ? 'fill-yellow-400 text-yellow-400' 
+                                : 'text-gray-300'
+                            }`}
+                          />
+                        ))}
+                      </div>
+                      
+                      <Button
+                        size="sm"
+                        className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-md"
+                      >
+                        <Play className="w-3 h-3 mr-1" />
+                        {story.progress > 0 
+                          ? (language === 'fr' ? 'Continuer' : 'Continue')
+                          : (language === 'fr' ? 'Commencer' : 'Start')
+                        }
+                      </Button>
+                    </div>
+                  </>
+                )}
+                
+                {story.isLocked && (
+                  <div className="text-center py-2">
+                    <p className="text-sm text-gray-500">
+                      {language === 'fr' ? 'Terminez les histoires précédentes pour débloquer' : 'Complete previous stories to unlock'}
+                    </p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          ))}
         </div>
 
-        {/* Language Categories */}
-        <div>
-          <h2 className="text-xl font-bold mb-4">Par langue</h2>
-          <div className="grid grid-cols-2 gap-4">
-            {['Ewondo', 'Duala', 'Bamiléké', 'Fulfuldé'].map((language) => (
-              <Card key={language} className="cursor-pointer hover:shadow-md transition-shadow">
-                <CardContent className="p-4 text-center">
-                  <h3 className="font-semibold">{language}</h3>
-                  <p className="text-sm text-gray-600">
-                    {Math.floor(Math.random() * 10) + 3} histoires
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
+        {/* Featured Section */}
+        <Card className="mt-8 bg-gradient-to-r from-orange-50 to-red-50 border-orange-200 shadow-lg">
+          <CardHeader>
+            <CardTitle className="flex items-center space-x-2 text-lg">
+              <Users className="w-5 h-5 text-orange-500" />
+              <span className="bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+                {language === 'fr' ? 'Histoires Communautaires' : 'Community Stories'}
+              </span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-gray-700 mb-4">
+              {language === 'fr' 
+                ? 'Découvrez des histoires créées par la communauté Lingua et partagez les vôtres !'
+                : 'Discover stories created by the Lingua community and share your own!'
+              }
+            </p>
+            <Button className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white">
+              <BookOpen className="w-4 h-4 mr-2" />
+              {language === 'fr' ? 'Explorer' : 'Explore'}
+            </Button>
+          </CardContent>
+        </Card>
       </div>
-
-      {/* Story Modal */}
-      {selectedStory && (
-        <StoryModal story={stories.find(s => s.id === selectedStory)} />
-      )}
     </div>
   );
 };
