@@ -107,7 +107,7 @@ const DuolingoProgressTree = () => {
     }
   };
 
-  // Generate SVG path for the winding trail
+  // Generate animated SVG path for the winding trail
   const generatePath = () => {
     const sortedLessons = [...lessons].sort((a, b) => b.position.y - a.position.y);
     let path = `M ${sortedLessons[0].position.x} ${sortedLessons[0].position.y}`;
@@ -116,107 +116,137 @@ const DuolingoProgressTree = () => {
       const curr = sortedLessons[i];
       const prev = sortedLessons[i - 1];
       
-      // Create smooth curves between points
-      const midY = (prev.position.y + curr.position.y) / 2;
-      path += ` Q ${prev.position.x} ${midY} ${curr.position.x} ${curr.position.y}`;
+      // Create smooth bezier curves between points
+      const controlPoint1X = prev.position.x + (curr.position.x - prev.position.x) * 0.3;
+      const controlPoint1Y = prev.position.y - (prev.position.y - curr.position.y) * 0.3;
+      const controlPoint2X = curr.position.x - (curr.position.x - prev.position.x) * 0.3;
+      const controlPoint2Y = curr.position.y + (prev.position.y - curr.position.y) * 0.3;
+      
+      path += ` C ${controlPoint1X} ${controlPoint1Y}, ${controlPoint2X} ${controlPoint2Y}, ${curr.position.x} ${curr.position.y}`;
     }
     
     return path;
   };
 
   return (
-    <div className="relative w-full h-96 bg-gradient-to-b from-green-400 via-blue-400 to-purple-500 rounded-3xl overflow-hidden shadow-lg">
-      {/* Background decorative elements */}
+    <div className="relative w-full h-[450px] bg-gradient-to-b from-green-400 via-blue-400 to-purple-500 rounded-3xl overflow-hidden shadow-xl">
+      {/* Enhanced background with floating elements */}
       <div className="absolute inset-0">
-        <div className="absolute top-10 left-10 w-6 h-6 bg-white/20 rounded-full animate-float"></div>
-        <div className="absolute top-20 right-16 w-4 h-4 bg-yellow-300/30 rounded-full animate-pulse"></div>
-        <div className="absolute bottom-16 left-16 w-5 h-5 bg-pink-300/25 rounded-full animate-bounce"></div>
-        <div className="absolute bottom-24 right-20 w-3 h-3 bg-white/30 rounded-full animate-pulse"></div>
+        {/* Floating decorative elements */}
+        <div className="absolute top-8 left-8 w-8 h-8 bg-white/30 rounded-full animate-bounce" style={{ animationDelay: '0s', animationDuration: '3s' }}></div>
+        <div className="absolute top-16 right-12 w-6 h-6 bg-yellow-300/40 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute bottom-20 left-12 w-7 h-7 bg-pink-300/35 rounded-full animate-bounce" style={{ animationDelay: '2s', animationDuration: '2.5s' }}></div>
+        <div className="absolute bottom-32 right-16 w-5 h-5 bg-white/40 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+        <div className="absolute top-1/3 left-1/4 w-4 h-4 bg-cyan-300/30 rounded-full animate-bounce" style={{ animationDelay: '1.5s', animationDuration: '4s' }}></div>
+        <div className="absolute top-2/3 right-1/3 w-6 h-6 bg-emerald-300/25 rounded-full animate-pulse" style={{ animationDelay: '2.5s' }}></div>
+        
+        {/* Gradient overlays for depth */}
+        <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent"></div>
       </div>
 
-      {/* SVG Trail */}
+      {/* Enhanced SVG Trail with glow effect */}
       <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
         <defs>
-          <linearGradient id="trailGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="rgba(255,255,255,0.8)" />
-            <stop offset="50%" stopColor="rgba(255,255,255,0.6)" />
-            <stop offset="100%" stopColor="rgba(255,255,255,0.4)" />
+          <linearGradient id="trailGradient" x1="0%" y1="100%" x2="0%" y2="0%">
+            <stop offset="0%" stopColor="rgba(255,255,255,0.9)" />
+            <stop offset="50%" stopColor="rgba(255,255,255,0.7)" />
+            <stop offset="100%" stopColor="rgba(255,255,255,0.5)" />
           </linearGradient>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="1" result="coloredBlur"/>
+            <feMerge> 
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
         </defs>
         <path
           d={generatePath()}
           stroke="url(#trailGradient)"
-          strokeWidth="0.8"
-          strokeDasharray="2,1"
+          strokeWidth="1.2"
+          strokeDasharray="3,2"
           fill="none"
+          filter="url(#glow)"
           className="animate-pulse"
+          style={{ animationDuration: '4s' }}
         />
       </svg>
 
-      {/* Lesson Nodes */}
+      {/* Lesson Nodes with enhanced interactions */}
       {lessons.map((lesson) => {
         const IconComponent = lesson.icon;
         
         return (
           <div
             key={lesson.id}
-            className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all duration-300 hover:scale-110"
+            className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all duration-300 hover:scale-110 group"
             style={{
               left: `${lesson.position.x}%`,
               top: `${lesson.position.y}%`
             }}
             onClick={() => handleLessonClick(lesson)}
           >
-            {/* Node Circle */}
-            <div className={`relative w-14 h-14 rounded-full border-4 border-white shadow-lg transition-all duration-300 ${
+            {/* Node Circle with enhanced styling */}
+            <div className={`relative w-16 h-16 rounded-full border-4 border-white shadow-xl transition-all duration-300 ${
               lesson.status === 'locked'
-                ? 'bg-gray-400'
+                ? 'bg-gray-400 shadow-gray-300/50'
                 : lesson.status === 'completed'
-                ? `bg-gradient-to-br ${lesson.color}`
-                : `bg-gradient-to-br ${lesson.color}`
-            } ${lesson.status !== 'locked' ? 'hover:shadow-xl hover:scale-105' : ''}`}>
+                ? `bg-gradient-to-br ${lesson.color} shadow-green-400/30`
+                : `bg-gradient-to-br ${lesson.color} shadow-blue-400/30`
+            } ${lesson.status !== 'locked' ? 'hover:shadow-2xl hover:scale-105 group-hover:border-yellow-300' : ''}`}>
               
-              {/* Icon */}
+              {/* Animated ring for available lessons */}
+              {lesson.status === 'available' && (
+                <div className="absolute inset-0 rounded-full border-2 border-yellow-300 animate-ping opacity-75"></div>
+              )}
+              
+              {/* Icon with better positioning */}
               <div className="absolute inset-0 flex items-center justify-center">
                 {lesson.status === 'locked' ? (
-                  <Lock className="w-6 h-6 text-gray-600" />
+                  <Lock className="w-7 h-7 text-gray-600" />
                 ) : lesson.status === 'completed' ? (
-                  <CheckCircle className="w-6 h-6 text-white" />
+                  <CheckCircle className="w-7 h-7 text-white drop-shadow-lg" />
                 ) : (
-                  <IconComponent className="w-6 h-6 text-white" />
+                  <IconComponent className="w-7 h-7 text-white drop-shadow-lg" />
                 )}
               </div>
 
-              {/* Level Badge */}
-              <div className="absolute -top-2 -right-2 w-6 h-6 bg-white rounded-full flex items-center justify-center shadow-md border-2 border-gray-100">
+              {/* Enhanced Level Badge */}
+              <div className="absolute -top-2 -right-2 w-7 h-7 bg-white rounded-full flex items-center justify-center shadow-lg border-2 border-gray-100 group-hover:border-yellow-300 transition-all duration-300">
                 <span className="text-xs font-bold text-gray-800">{lesson.id}</span>
               </div>
 
-              {/* Stars */}
+              {/* Enhanced Stars */}
               {lesson.status !== 'locked' && lesson.stars > 0 && (
-                <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 flex space-x-0.5">
+                <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-0.5">
                   {Array.from({ length: lesson.stars }, (_, i) => (
                     <Star
                       key={i}
-                      className="w-2.5 h-2.5 fill-yellow-400 text-yellow-400"
+                      className="w-3 h-3 fill-yellow-400 text-yellow-400 drop-shadow-sm"
                     />
                   ))}
                 </div>
               )}
+
+              {/* Completion glow effect */}
+              {lesson.status === 'completed' && (
+                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-emerald-400/20 to-green-400/20 animate-pulse"></div>
+              )}
             </div>
 
-            {/* Hover Tooltip */}
-            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-              <div className="bg-white/95 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg border border-white/20 min-w-max">
-                <p className="text-xs font-semibold text-gray-800">
+            {/* Enhanced Hover Tooltip */}
+            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-10">
+              <div className="bg-white/95 backdrop-blur-sm rounded-xl px-4 py-3 shadow-xl border border-white/30 min-w-max">
+                <p className="text-sm font-bold text-gray-800">
                   {language === 'fr' ? lesson.titleFr : lesson.title}
                 </p>
                 {lesson.status !== 'locked' && (
-                  <div className="flex items-center space-x-1 mt-1">
+                  <div className="flex items-center space-x-1 mt-1.5">
                     {Array.from({ length: lesson.maxStars }, (_, i) => (
                       <Star
                         key={i}
-                        className={`w-2 h-2 ${
+                        className={`w-2.5 h-2.5 ${
                           i < lesson.stars
                             ? 'fill-yellow-400 text-yellow-400'
                             : 'text-gray-300'
@@ -225,17 +255,32 @@ const DuolingoProgressTree = () => {
                     ))}
                   </div>
                 )}
+                <div className="text-xs text-gray-600 mt-1">
+                  {lesson.status === 'completed' 
+                    ? (language === 'fr' ? 'Terminé!' : 'Completed!')
+                    : lesson.status === 'available'
+                    ? (language === 'fr' ? 'Disponible' : 'Available')
+                    : (language === 'fr' ? 'Verrouillé' : 'Locked')
+                  }
+                </div>
               </div>
+              {/* Tooltip arrow */}
+              <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-white/95"></div>
             </div>
           </div>
         );
       })}
 
-      {/* Character Mascot */}
-      <div className="absolute bottom-4 right-4 w-12 h-12 bg-white/90 rounded-full flex items-center justify-center shadow-lg animate-bounce">
-        <div className="w-8 h-8 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center">
-          <span className="text-white text-xs font-bold">🦜</span>
+      {/* Enhanced Character Mascot */}
+      <div className="absolute bottom-6 right-6 w-14 h-14 bg-white/95 rounded-full flex items-center justify-center shadow-xl animate-bounce cursor-pointer hover:scale-110 transition-transform duration-300">
+        <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center shadow-lg">
+          <span className="text-white text-lg">🦜</span>
         </div>
+      </div>
+
+      {/* Progress indicator */}
+      <div className="absolute top-4 left-4 bg-white/90 rounded-full px-3 py-1 text-xs font-semibold text-gray-800 shadow-lg">
+        {lessons.filter(l => l.status === 'completed').length}/{lessons.length} {language === 'fr' ? 'Terminé' : 'Complete'}
       </div>
     </div>
   );
