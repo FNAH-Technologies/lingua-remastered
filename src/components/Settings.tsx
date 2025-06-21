@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -21,6 +20,7 @@ import {
 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import Header from './Header';
+import TTSSettings from './TTSSettings';
 
 const Settings = () => {
   const navigate = useNavigate();
@@ -191,6 +191,9 @@ const Settings = () => {
             </CardContent>
           </Card>
         ))}
+
+        {/* Add TTS Settings */}
+        <TTSSettings />
 
         {/* Action Items */}
         <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">

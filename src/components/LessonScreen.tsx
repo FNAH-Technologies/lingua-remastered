@@ -5,8 +5,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Volume2, Heart, Star, Check, X, Mic, BookOpen } from 'lucide-react';
+import { ArrowLeft, Volume2, Heart, Star, Check, X, Mic, BookOpen, VolumeX } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { lessonDataService, LessonQuestion } from '@/services/lessonDataService';
+import { ttsService } from '@/services/textToSpeechService';
+import { toast } from "@/hooks/use-toast";
 import Header from './Header';
 
 const LessonScreen = () => {
@@ -21,36 +24,26 @@ const LessonScreen = () => {
   const [progress, setProgress] = useState(0);
   const [showResult, setShowResult] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
+  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
 
-  const lessonData = {
-    title: language === 'fr' ? 'Communication de base' : 'Basic Communication',
-    questions: [
-      {
-        id: 1,
-        type: 'multiple-choice',
-        question: language === 'fr' ? 'Comment dit-on "Bonjour" en anglais ?' : 'How do you say "Hello" in French?',
-        options: ['Good morning', 'Bonjour', 'Good night', 'Au revoir'],
-        correct: language === 'fr' ? 'Good morning' : 'Bonjour',
-        explanation: language === 'fr' ? '"Good morning" signifie "Bonjour" en anglais' : '"Bonjour" means "Hello" in French'
-      },
-      {
-        id: 2,
-        type: 'translation',
-        question: language === 'fr' ? 'Traduisez: "Comment allez-vous ?"' : 'Translate: "How are you?"',
-        options: ['How are you?', 'Where are you?', 'What are you?', 'Who are you?'],
-        correct: language === 'fr' ? 'How are you?' : 'Comment allez-vous ?',
-        explanation: language === 'fr' ? 'Cette phrase demande l\'état de la personne' : 'This phrase asks about someone\'s wellbeing'
-      },
-      {
-        id: 3,
-        type: 'listening',
-        question: language === 'fr' ? 'Écoutez et choisissez la bonne réponse' : 'Listen and choose the correct answer',
-        options: ['Merci', 'S\'il vous plaît', 'Excusez-moi', 'De rien'],
-        correct: 'Merci',
-        explanation: language === 'fr' ? '"Merci" exprime la gratitude' : '"Merci" expresses gratitude'
-      }
-    ]
-  };
+  const lessonData = lessonDataService.getLessonById(lessonId || '1');
+  
+  if (!lessonData) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
+        <Card className="p-6 text-center">
+          <CardContent>
+            <h2 className="text-xl font-bold text-gray-800 mb-4">
+              {language === 'fr' ? 'Leçon non trouvée' : 'Lesson Not Found'}
+            </h2>
+            <Button onClick={() => navigate('/')}>
+              {language === 'fr' ? 'Retour à l\'accueil' : 'Back to Home'}
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   const currentQ = lessonData.questions[currentQuestion];
   const totalQuestions = lessonData.questions.length;
@@ -70,6 +63,10 @@ const LessonScreen = () => {
     
     if (correct) {
       setXp(prev => prev + 10);
+      // Play success sound or pronunciation
+      if (currentQ.audioText && ttsService.hasApiKey()) {
+        handlePlayAudio(currentQ.audioText);
+      }
     } else {
       setHearts(prev => Math.max(0, prev - 1));
     }
@@ -83,19 +80,56 @@ const LessonScreen = () => {
       setCurrentQuestion(prev => prev + 1);
     } else {
       // Lesson completed
+      toast({
+        title: language === 'fr' ? 'Leçon terminée !' : 'Lesson Completed!',
+        description: language === 'fr' ? `Vous avez gagné ${xp} XP !` : `You earned ${xp} XP!`
+      });
       navigate('/', { state: { lessonCompleted: true, earnedXP: xp } });
     }
   };
 
-  const playAudio = () => {
-    // Mock audio play functionality
-    console.log('Playing audio for:', currentQ.question);
+  const handlePlayAudio = async (text: string) => {
+    if (!ttsService.hasApiKey()) {
+      toast({
+        title: language === 'fr' ? 'Configuration requise' : 'Setup Required',
+        description: language === 'fr' ? 'Configurez votre clé API dans les paramètres pour utiliser la synthèse vocale' : 'Configure your API key in settings to use text-to-speech',
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsPlayingAudio(true);
+    try {
+      await ttsService.speak(text);
+    } catch (error) {
+      console.error('TTS Error:', error);
+    } finally {
+      setIsPlayingAudio(false);
+    }
+  };
+
+  const getQuestionTypeIcon = (type: string) => {
+    switch (type) {
+      case 'listening': return <Volume2 className="w-4 h-4" />;
+      case 'speaking': return <Mic className="w-4 h-4" />;
+      case 'translation': return <BookOpen className="w-4 h-4" />;
+      default: return <Check className="w-4 h-4" />;
+    }
+  };
+
+  const getDifficultyColor = (difficulty: string) => {
+    switch (difficulty) {
+      case 'easy': return 'bg-green-100 text-green-700';
+      case 'medium': return 'bg-yellow-100 text-yellow-700';
+      case 'hard': return 'bg-red-100 text-red-700';
+      default: return 'bg-gray-100 text-gray-700';
+    }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
       <Header 
-        title={lessonData.title}
+        title={language === 'fr' ? lessonData.titleFr : lessonData.title}
         showBack={true}
         onBack={() => navigate('/')}
       />
@@ -129,22 +163,45 @@ const LessonScreen = () => {
             {/* Question Card */}
             <Card className="mb-6 shadow-lg border-0 bg-white/90 backdrop-blur-sm">
               <CardHeader className="pb-4">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-lg font-bold text-gray-800">
-                    {currentQ.question}
-                  </CardTitle>
-                  {currentQ.type === 'listening' && (
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center space-x-2">
+                    <Badge className={getDifficultyColor(currentQ.difficulty)}>
+                      {getQuestionTypeIcon(currentQ.type)}
+                      <span className="ml-1 capitalize">{currentQ.type.replace('-', ' ')}</span>
+                    </Badge>
+                    <Badge variant="outline" className={getDifficultyColor(currentQ.difficulty)}>
+                      {currentQ.difficulty}
+                    </Badge>
+                  </div>
+                  
+                  {currentQ.audioText && (
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={playAudio}
+                      onClick={() => handlePlayAudio(currentQ.audioText!)}
+                      disabled={isPlayingAudio}
                       className="bg-blue-50 hover:bg-blue-100 border-blue-200"
                     >
-                      <Volume2 className="w-4 h-4" />
+                      {isPlayingAudio ? (
+                        <VolumeX className="w-4 h-4" />
+                      ) : (
+                        <Volume2 className="w-4 h-4" />
+                      )}
                     </Button>
                   )}
                 </div>
+                
+                <CardTitle className="text-lg font-bold text-gray-800">
+                  {language === 'fr' ? currentQ.questionFr : currentQ.question}
+                </CardTitle>
+                
+                {currentQ.pronunciation && (
+                  <p className="text-sm text-blue-600 italic">
+                    /{currentQ.pronunciation}/
+                  </p>
+                )}
               </CardHeader>
+              
               <CardContent className="space-y-3">
                 {currentQ.options.map((option, index) => (
                   <Button
@@ -205,7 +262,22 @@ const LessonScreen = () => {
                   }
                 </h3>
                 
-                <p className="text-gray-600 mt-2">{currentQ.explanation}</p>
+                <p className="text-gray-600 mt-2">
+                  {language === 'fr' ? currentQ.explanationFr : currentQ.explanation}
+                </p>
+                
+                {!isCorrect && (
+                  <div className="mt-3 p-3 bg-blue-50 rounded-lg">
+                    <p className="text-sm text-blue-800">
+                      <strong>{language === 'fr' ? 'Bonne réponse :' : 'Correct answer:'}</strong> {currentQ.correct}
+                    </p>
+                    {currentQ.pronunciation && (
+                      <p className="text-sm text-blue-600 italic mt-1">
+                        /{currentQ.pronunciation}/
+                      </p>
+                    )}
+                  </div>
+                )}
                 
                 {isCorrect && (
                   <Badge className="mt-3 bg-yellow-500 text-white">
