@@ -18,21 +18,25 @@ const SplashScreen = () => {
   return (
     <div className="min-h-screen bg-lingua-gradient flex flex-col items-center justify-center text-white">
       <div className="text-center space-y-8">
-        {/* Logo with bubble container */}
+        {/* Enhanced Logo with proper bubble container and sizing */}
         <div className="w-32 h-32 mx-auto relative animate-bounce-in">
-          <div className="w-full h-full bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/20 shadow-2xl">
-            <div className="w-24 h-24 bg-white/90 rounded-full flex items-center justify-center p-2">
+          <div className="w-full h-full bg-gradient-to-br from-orange-400 via-orange-500 to-red-500 rounded-full flex items-center justify-center shadow-2xl border-4 border-white/30 relative overflow-hidden">
+            {/* Inner glow effect */}
+            <div className="absolute inset-2 bg-white/20 rounded-full"></div>
+            {/* Logo with proper sizing to fill the container */}
+            <div className="w-20 h-20 relative z-10 flex items-center justify-center">
               <img 
                 src="/lovable-uploads/54bc6f2e-b470-42a0-a685-de2f6c1f6398.png" 
                 alt="Lingua Logo" 
-                className="w-full h-full object-contain"
+                className="w-full h-full object-contain filter drop-shadow-sm"
               />
             </div>
           </div>
-          {/* Floating bubbles around logo */}
-          <div className="absolute -top-2 -right-2 w-4 h-4 bg-white/20 rounded-full animate-pulse"></div>
-          <div className="absolute top-4 -left-3 w-3 h-3 bg-white/15 rounded-full animate-pulse" style={{animationDelay: '0.5s'}}></div>
-          <div className="absolute -bottom-1 left-6 w-2 h-2 bg-white/25 rounded-full animate-pulse" style={{animationDelay: '1s'}}></div>
+          {/* Enhanced floating bubbles with better positioning */}
+          <div className="absolute -top-2 -right-2 w-4 h-4 bg-orange-300/60 rounded-full animate-pulse shadow-lg"></div>
+          <div className="absolute top-3 -left-3 w-3 h-3 bg-orange-400/50 rounded-full animate-pulse shadow-md" style={{animationDelay: '0.5s'}}></div>
+          <div className="absolute -bottom-2 right-2 w-2 h-2 bg-red-400/60 rounded-full animate-pulse shadow-sm" style={{animationDelay: '1s'}}></div>
+          <div className="absolute bottom-1 -left-2 w-2.5 h-2.5 bg-orange-200/70 rounded-full animate-pulse shadow-sm" style={{animationDelay: '1.5s'}}></div>
         </div>
 
         {/* App Title */}
