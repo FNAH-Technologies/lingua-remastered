@@ -1,269 +1,378 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Trophy, Medal, Award, Star, Crown, Flame, Zap } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { 
+  Trophy, 
+  Medal, 
+  Crown, 
+  Star, 
+  Flame, 
+  Users,
+  Target,
+  Calendar,
+  TrendingUp,
+  Award
+} from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
+import Header from './Header';
+
+interface LeaderboardUser {
+  id: string;
+  name: string;
+  xp: number;
+  streak: number;
+  level: number;
+  lessonsCompleted: number;
+  rank: number;
+  avatar?: string;
+  country?: string;
+  weeklyXp?: number;
+  monthlyXp?: number;
+}
 
 const EnhancedLeaderboard = () => {
-  const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'weekly' | 'monthly' | 'allTime'>('weekly');
+  const { language } = useLanguage();
+  const [activeTab, setActiveTab] = useState('all-time');
+  const [users, setUsers] = useState<LeaderboardUser[]>([]);
 
-  const leaderboardData = {
-    weekly: [
-      { id: 1, name: 'Marie Ngo', xp: 2450, streak: 12, avatar: 'MN', country: '🇨🇲', level: 15 },
-      { id: 2, name: 'Paul Tchienko', xp: 2180, streak: 8, avatar: 'PT', country: '🇨🇲', level: 13 },
-      { id: 3, name: 'Sarah Kom', xp: 1950, streak: 15, avatar: 'SK', country: '🇨🇲', level: 12 },
-      { id: 4, name: 'Jean Mbarga', xp: 1820, streak: 6, avatar: 'JM', country: '🇨🇲', level: 11 },
-      { id: 5, name: 'Claire Fouda', xp: 1650, streak: 9, avatar: 'CF', country: '🇨🇲', level: 10 },
-    ],
-    monthly: [
-      { id: 1, name: 'Sarah Kom', xp: 8950, streak: 25, avatar: 'SK', country: '🇨🇲', level: 22 },
-      { id: 2, name: 'Marie Ngo', xp: 8450, streak: 22, avatar: 'MN', country: '🇨🇲', level: 21 },
-      { id: 3, name: 'Paul Tchienko', xp: 7180, streak: 18, avatar: 'PT', country: '🇨🇲', level: 19 },
-    ],
-    allTime: [
-      { id: 1, name: 'Marie Ngo', xp: 24500, streak: 45, avatar: 'MN', country: '🇨🇲', level: 35 },
-      { id: 2, name: 'Sarah Kom', xp: 21950, streak: 38, avatar: 'SK', country: '🇨🇲', level: 32 },
-      { id: 3, name: 'Paul Tchienko', xp: 19180, streak: 32, avatar: 'PT', country: '🇨🇲', level: 28 },
-    ]
-  };
+  // Mock data - in real app this would come from backend
+  useEffect(() => {
+    const mockUsers: LeaderboardUser[] = [
+      {
+        id: '1',
+        name: 'Marie Ngo',
+        xp: 5240,
+        streak: 15,
+        level: 12,
+        lessonsCompleted: 87,
+        rank: 1,
+        country: 'CM',
+        weeklyXp: 890,
+        monthlyXp: 2340
+      },
+      {
+        id: '2',
+        name: 'Paul Kamdem',
+        xp: 4890,
+        streak: 22,
+        level: 11,
+        lessonsCompleted: 76,
+        rank: 2,
+        country: 'CM',
+        weeklyXp: 720,
+        monthlyXp: 2120
+      },
+      {
+        id: '3',
+        name: 'Grace Mballa',
+        xp: 4650,
+        streak: 8,
+        level: 10,
+        lessonsCompleted: 82,
+        rank: 3,
+        country: 'CM',
+        weeklyXp: 680,
+        monthlyXp: 1980
+      },
+      {
+        id: '4',
+        name: 'Jean Fokou',
+        xp: 4320,
+        streak: 12,
+        level: 10,
+        lessonsCompleted: 71,
+        rank: 4,
+        country: 'CM',
+        weeklyXp: 590,
+        monthlyXp: 1850
+      },
+      {
+        id: '5',
+        name: 'Aminatou Sall',
+        xp: 4100,
+        streak: 6,
+        level: 9,
+        lessonsCompleted: 68,
+        rank: 5,
+        country: 'CM',
+        weeklyXp: 520,
+        monthlyXp: 1720
+      },
+      {
+        id: '6',
+        name: 'Victor Ekwese',
+        xp: 3980,
+        streak: 18,
+        level: 9,
+        lessonsCompleted: 65,
+        rank: 6,
+        country: 'CM',
+        weeklyXp: 480,
+        monthlyXp: 1650
+      },
+      {
+        id: '7',
+        name: 'Linda Awah',
+        xp: 3750,
+        streak: 4,
+        level: 8,
+        lessonsCompleted: 61,
+        rank: 7,
+        country: 'CM',
+        weeklyXp: 420,
+        monthlyXp: 1520
+      },
+      {
+        id: '8',
+        name: 'Ernest Tagne',
+        xp: 3520,
+        streak: 9,
+        level: 8,
+        lessonsCompleted: 58,
+        rank: 8,
+        country: 'CM',
+        weeklyXp: 380,
+        monthlyXp: 1420
+      }
+    ];
 
-  const currentUser = { id: 999, name: 'Vous', xp: 1250, streak: 5, rank: 24, level: 8 };
+    setUsers(mockUsers);
+  }, []);
 
-  const getRankIcon = (position: number) => {
-    switch (position) {
+  const getRankIcon = (rank: number) => {
+    switch (rank) {
       case 1:
-        return <Crown className="w-5 h-5 text-yellow-500" />;
+        return <Crown className="w-6 h-6 text-yellow-500" />;
       case 2:
-        return <Medal className="w-5 h-5 text-gray-400" />;
+        return <Medal className="w-6 h-6 text-gray-400" />;
       case 3:
-        return <Award className="w-5 h-5 text-amber-600" />;
+        return <Award className="w-6 h-6 text-amber-600" />;
       default:
-        return <span className="w-5 h-5 flex items-center justify-center text-xs font-bold text-gray-600">{position}</span>;
+        return <span className="w-6 h-6 flex items-center justify-center text-sm font-bold text-gray-600">#{rank}</span>;
     }
   };
 
-  const getPodiumHeight = (position: number) => {
-    switch (position) {
-      case 1: return 'h-20';
-      case 2: return 'h-16';
-      case 3: return 'h-12';
-      default: return 'h-8';
+  const getRankBadgeColor = (rank: number) => {
+    switch (rank) {
+      case 1:
+        return 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-white';
+      case 2:
+        return 'bg-gradient-to-r from-gray-300 to-gray-500 text-white';
+      case 3:
+        return 'bg-gradient-to-r from-amber-400 to-amber-600 text-white';
+      default:
+        return 'bg-gray-100 text-gray-700';
     }
   };
 
-  const getPodiumColor = (position: number) => {
-    switch (position) {
-      case 1: return 'from-yellow-400 to-yellow-600';
-      case 2: return 'from-gray-300 to-gray-500';
-      case 3: return 'from-amber-400 to-amber-600';
-      default: return 'from-gray-200 to-gray-400';
+  const currentUser = users.find(u => u.id === '1'); // Mock current user
+
+  const tabData = [
+    {
+      id: 'all-time',
+      label: language === 'fr' ? 'Tous Temps' : 'All Time',
+      icon: Trophy,
+      sortBy: 'xp'
+    },
+    {
+      id: 'weekly',
+      label: language === 'fr' ? 'Semaine' : 'Weekly',
+      icon: Calendar,
+      sortBy: 'weeklyXp'
+    },
+    {
+      id: 'monthly',
+      label: language === 'fr' ? 'Mensuel' : 'Monthly',
+      icon: TrendingUp,
+      sortBy: 'monthlyXp'
+    }
+  ];
+
+  const getSortedUsers = (sortBy: string) => {
+    return [...users].sort((a, b) => {
+      const aValue = sortBy === 'weeklyXp' ? (a.weeklyXp || 0) : 
+                     sortBy === 'monthlyXp' ? (a.monthlyXp || 0) : a.xp;
+      const bValue = sortBy === 'weeklyXp' ? (b.weeklyXp || 0) : 
+                     sortBy === 'monthlyXp' ? (b.monthlyXp || 0) : b.xp;
+      return bValue - aValue;
+    });
+  };
+
+  const getDisplayValue = (user: LeaderboardUser, sortBy: string) => {
+    switch (sortBy) {
+      case 'weeklyXp':
+        return `${user.weeklyXp || 0} XP`;
+      case 'monthlyXp':
+        return `${user.monthlyXp || 0} XP`;
+      default:
+        return `${user.xp} XP`;
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
-      {/* Enhanced Header */}
-      <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white p-6 rounded-b-3xl shadow-xl">
-        <div className="flex items-center space-x-4 mb-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate('/')}
-            className="text-white hover:bg-white/20 p-2 rounded-full"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
-          <div className="flex items-center space-x-3">
-            <Trophy className="w-7 h-7 text-yellow-300" />
-            <h1 className="text-2xl font-bold">Classement</h1>
-          </div>
-        </div>
-        <p className="opacity-90 text-sm">Compétitionnez avec la communauté Lingua</p>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50">
+      <Header 
+        title={language === 'fr' ? 'Classement' : 'Leaderboard'}
+        showBack={true}
+      />
 
-      <div className="p-4 space-y-6">
-        {/* Enhanced Tabs */}
-        <Card className="shadow-sm">
-          <div className="flex p-1 bg-gray-50 rounded-lg">
-            {[
-              { key: 'weekly', label: 'Semaine', icon: Zap },
-              { key: 'monthly', label: 'Mois', icon: Star },
-              { key: 'allTime', label: 'Tout temps', icon: Trophy }
-            ].map((tab) => (
-              <Button
-                key={tab.key}
-                variant={activeTab === tab.key ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => setActiveTab(tab.key as any)}
-                className={`flex-1 transition-all duration-300 ${
-                  activeTab === tab.key 
-                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-md' 
-                    : 'text-gray-600 hover:bg-white'
-                }`}
-              >
-                <tab.icon className="w-4 h-4 mr-2" />
-                {tab.label}
-              </Button>
-            ))}
-          </div>
-        </Card>
-
-        {/* Your Position Card */}
-        <Card className="bg-gradient-to-r from-orange-50 to-orange-100 border-orange-200 shadow-sm">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <div className="w-10 h-10 bg-gradient-to-r from-orange-400 to-orange-600 rounded-full flex items-center justify-center text-white font-bold shadow-md">
-                  {currentUser.rank}
-                </div>
-                <div>
-                  <p className="font-semibold text-gray-800">Votre position</p>
-                  <div className="flex items-center space-x-3 text-sm text-gray-600">
-                    <div className="flex items-center space-x-1">
-                      <Star className="w-3 h-3" />
-                      <span>{currentUser.xp} XP</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <span className="w-4 h-4 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center text-white text-xs font-bold">
-                        {currentUser.level}
-                      </span>
-                      <span>Niveau {currentUser.level}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <Badge className="bg-orange-500 text-white hover:bg-orange-600">
-                <Flame className="w-3 h-3 mr-1" />
-                {currentUser.streak}
-              </Badge>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Enhanced Podium */}
-        <Card className="bg-gradient-to-br from-white to-gray-50 shadow-lg">
-          <CardContent className="p-6">
-            <div className="flex justify-center items-end space-x-4 mb-6">
-              {/* Reorder for podium display: 2nd, 1st, 3rd */}
-              {[1, 0, 2].map((index) => {
-                const user = leaderboardData[activeTab][index];
-                if (!user) return null;
-                
-                const position = index === 1 ? 1 : index === 0 ? 2 : 3;
-                
-                return (
-                  <div key={user.id} className="text-center group cursor-pointer">
-                    <div className="relative mb-3 transition-transform duration-300 group-hover:scale-110">
-                      <Avatar className="mx-auto w-12 h-12 border-3 border-white shadow-lg">
-                        <AvatarFallback className={`bg-gradient-to-br ${getPodiumColor(position)} text-white font-bold`}>
-                          {user.avatar}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="absolute -top-2 -right-2">
-                        {getRankIcon(position)}
-                      </div>
-                    </div>
-                    <p className="text-xs font-semibold text-gray-800 mb-1">{user.name.split(' ')[0]}</p>
-                    <div className={`bg-gradient-to-br ${getPodiumColor(position)} ${getPodiumHeight(position)} w-16 rounded-t-lg flex flex-col justify-end items-center text-white p-2 mx-auto shadow-md`}>
-                      <p className="text-xs font-bold">{user.xp}</p>
-                      <p className="text-xs opacity-90">XP</p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Enhanced Leaderboard List */}
-        <div className="space-y-3">
-          {leaderboardData[activeTab].map((user, index) => (
-            <Card 
-              key={user.id} 
-              className={`transition-all duration-300 hover:shadow-md hover:scale-[1.02] cursor-pointer ${
-                index < 3 ? 'border-yellow-200 bg-gradient-to-r from-yellow-50 to-orange-50' : 'bg-white'
-              }`}
-            >
-              <CardContent className="p-4">
+      <div className="p-4 max-w-4xl mx-auto space-y-6">
+        {/* Current User Stats */}
+        {currentUser && (
+          <Card className="bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white border-0 shadow-xl">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
-                  <div className="flex items-center space-x-3">
-                    <div className="flex items-center justify-center w-8 h-8">
-                      {getRankIcon(index + 1)}
-                    </div>
-                    <div className="relative">
-                      <Avatar className="w-10 h-10 border-2 border-white shadow-sm">
-                        <AvatarFallback className="bg-gradient-to-br from-indigo-400 to-purple-500 text-white font-semibold">
-                          {user.avatar}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center text-white text-xs font-bold border-2 border-white">
-                        {user.level}
-                      </div>
-                    </div>
+                  <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
+                    <Crown className="w-8 h-8 text-yellow-300" />
                   </div>
-                  
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-2 mb-1">
-                      <p className="font-semibold text-gray-800">{user.name}</p>
-                      <span className="text-lg">{user.country}</span>
-                    </div>
-                    <div className="flex items-center space-x-4 text-sm text-gray-600">
-                      <div className="flex items-center space-x-1">
-                        <Star className="w-3 h-3 text-yellow-500" />
-                        <span className="font-medium">{user.xp} XP</span>
-                      </div>
-                      <div className="flex items-center space-x-1">
-                        <Flame className="w-3 h-3 text-orange-500" />
-                        <span>{user.streak} jours</span>
-                      </div>
-                    </div>
+                  <div>
+                    <h3 className="text-xl font-bold">{currentUser.name}</h3>
+                    <p className="opacity-90">
+                      {language === 'fr' ? 'Votre Position:' : 'Your Rank:'} #{currentUser.rank}
+                    </p>
                   </div>
-                  
-                  {index < 3 && (
-                    <div className="text-right">
-                      <Badge variant="outline" className="border-yellow-400 text-yellow-700">
-                        Top 3
-                      </Badge>
-                    </div>
-                  )}
                 </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                <div className="text-right">
+                  <p className="text-2xl font-bold">{currentUser.xp} XP</p>
+                  <p className="opacity-90">{language === 'fr' ? 'Niveau' : 'Level'} {currentUser.level}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
-        {/* Enhanced Weekly Challenge */}
-        <Card className="bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200 shadow-sm">
-          <CardHeader className="pb-4">
-            <CardTitle className="flex items-center space-x-2 text-lg">
-              <Trophy className="w-5 h-5 text-purple-500" />
-              <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                Défi de la semaine
-              </span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-gray-700 mb-4 font-medium">
-              Apprenez 50 nouveaux mots dans n'importe quelle langue
+        {/* Leaderboard Tabs */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-3 bg-white/80 backdrop-blur-sm">
+            {tabData.map((tab) => (
+              <TabsTrigger 
+                key={tab.id}
+                value={tab.id}
+                className="flex items-center space-x-2 data-[state=active]:bg-purple-500 data-[state=active]:text-white"
+              >
+                <tab.icon className="w-4 h-4" />
+                <span>{tab.label}</span>
+              </TabsTrigger>
+            ))}
+          </TabsList>
+
+          {tabData.map((tab) => (
+            <TabsContent key={tab.id} value={tab.id} className="space-y-4">
+              {/* Top 3 Podium */}
+              <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Trophy className="w-5 h-5 text-yellow-500" />
+                    <span>{language === 'fr' ? 'Podium' : 'Top 3'}</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-3 gap-4">
+                    {getSortedUsers(tab.sortBy).slice(0, 3).map((user, index) => (
+                      <div key={user.id} className="text-center">
+                        <div className={`w-16 h-16 mx-auto mb-3 rounded-full flex items-center justify-center ${getRankBadgeColor(index + 1)}`}>
+                          {getRankIcon(index + 1)}
+                        </div>
+                        <h4 className="font-semibold text-gray-800 truncate">{user.name}</h4>
+                        <p className="text-sm text-gray-600">{getDisplayValue(user, tab.sortBy)}</p>
+                        <div className="flex items-center justify-center space-x-2 mt-2">
+                          <div className="flex items-center space-x-1">
+                            <Flame className="w-3 h-3 text-orange-500" />
+                            <span className="text-xs">{user.streak}</span>
+                          </div>
+                          <div className="flex items-center space-x-1">
+                            <Star className="w-3 h-3 text-purple-500" />
+                            <span className="text-xs">{user.level}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Full Rankings */}
+              <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Users className="w-5 h-5 text-purple-500" />
+                    <span>{language === 'fr' ? 'Classement Complet' : 'Full Rankings'}</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  {getSortedUsers(tab.sortBy).map((user, index) => (
+                    <div 
+                      key={user.id}
+                      className={`flex items-center justify-between p-4 rounded-lg transition-all duration-200 ${
+                        user.id === '1' ? 'bg-purple-50 border-2 border-purple-200' : 'bg-gray-50 hover:bg-gray-100'
+                      }`}
+                    >
+                      <div className="flex items-center space-x-4">
+                        <div className="flex items-center justify-center w-8 h-8">
+                          {getRankIcon(index + 1)}
+                        </div>
+                        <div>
+                          <h4 className="font-semibold text-gray-800">{user.name}</h4>
+                          <div className="flex items-center space-x-3 text-sm text-gray-600">
+                            <div className="flex items-center space-x-1">
+                              <Target className="w-3 h-3" />
+                              <span>{user.lessonsCompleted} {language === 'fr' ? 'leçons' : 'lessons'}</span>
+                            </div>
+                            <div className="flex items-center space-x-1">
+                              <Flame className="w-3 h-3 text-orange-500" />
+                              <span>{user.streak}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-bold text-lg text-gray-800">{getDisplayValue(user, tab.sortBy)}</p>
+                        <Badge variant="outline" className="text-xs">
+                          {language === 'fr' ? 'Niveau' : 'Level'} {user.level}
+                        </Badge>
+                      </div>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            </TabsContent>
+          ))}
+        </Tabs>
+
+        {/* Competition Info */}
+        <Card className="bg-gradient-to-r from-orange-100 to-pink-100 border-orange-200 shadow-lg">
+          <CardContent className="p-6 text-center">
+            <h3 className="text-lg font-bold text-gray-800 mb-2">
+              {language === 'fr' ? 'Compétition Mensuelle' : 'Monthly Competition'}
+            </h3>
+            <p className="text-gray-600 mb-4">
+              {language === 'fr' 
+                ? 'Terminez dans le top 3 pour gagner des badges exclusifs!'
+                : 'Finish in the top 3 to win exclusive badges!'
+              }
             </p>
-            <div className="space-y-3">
-              <div className="flex justify-between items-center text-sm">
-                <span className="text-gray-600">Progression</span>
-                <span className="font-semibold text-purple-600">12/50 mots</span>
+            <div className="flex justify-center space-x-4">
+              <div className="text-center">
+                <div className="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center mx-auto mb-1">
+                  <Crown className="w-4 h-4 text-white" />
+                </div>
+                <p className="text-xs text-gray-600">500 XP</p>
               </div>
-              <div className="w-full bg-purple-100 rounded-full h-3">
-                <div className="bg-gradient-to-r from-purple-500 to-pink-500 h-3 rounded-full transition-all duration-700" style={{ width: '24%' }}></div>
+              <div className="text-center">
+                <div className="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center mx-auto mb-1">
+                  <Medal className="w-4 h-4 text-white" />
+                </div>
+                <p className="text-xs text-gray-600">300 XP</p>
               </div>
-              <div className="flex justify-between items-center">
-                <Badge variant="outline" className="border-purple-400 text-purple-700">
-                  <Zap className="w-3 h-3 mr-1" />
-                  100 XP
-                </Badge>
-                <span className="text-xs text-gray-500">5 jours restants</span>
+              <div className="text-center">
+                <div className="w-8 h-8 bg-amber-600 rounded-full flex items-center justify-center mx-auto mb-1">
+                  <Award className="w-4 h-4 text-white" />
+                </div>
+                <p className="text-xs text-gray-600">200 XP</p>
               </div>
             </div>
           </CardContent>
