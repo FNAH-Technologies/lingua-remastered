@@ -17,8 +17,18 @@ import NotFound from "./pages/NotFound";
 import OnboardingScreen from "./components/OnboardingScreen";
 import ChallengeHub from "./components/ChallengeHub";
 import Settings from "./components/Settings";
+import ErrorBoundary from "./components/common/ErrorBoundary";
+import BottomNavigation from "./components/navigation/BottomNavigation";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 3,
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      gcTime: 1000 * 60 * 10, // 10 minutes
+    },
+  },
+});
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -60,41 +70,50 @@ const App = () => {
 
   if (!isAuthenticated) {
     return (
-      <LanguageProvider>
-        <LoginScreen onLogin={handleLogin} />
-      </LanguageProvider>
+      <ErrorBoundary>
+        <LanguageProvider>
+          <LoginScreen onLogin={handleLogin} />
+        </LanguageProvider>
+      </ErrorBoundary>
     );
   }
 
   if (needsOnboarding) {
     return (
-      <LanguageProvider>
-        <OnboardingScreen onComplete={handleOnboardingComplete} />
-      </LanguageProvider>
+      <ErrorBoundary>
+        <LanguageProvider>
+          <OnboardingScreen onComplete={handleOnboardingComplete} />
+        </LanguageProvider>
+      </ErrorBoundary>
     );
   }
 
   return (
-    <LanguageProvider>
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/lesson/:lessonId" element={<LessonScreen />} />
-              <Route path="/stories" element={<StoryHub />} />
-              <Route path="/challenges" element={<ChallengeHub />} />
-              <Route path="/leaderboard" element={<EnhancedLeaderboard />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </TooltipProvider>
-      </QueryClientProvider>
-    </LanguageProvider>
+    <ErrorBoundary>
+      <LanguageProvider>
+        <QueryClientProvider client={queryClient}>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <div className="pb-20"> {/* Add bottom padding for navigation */}
+                <Routes>
+                  <Route path="/" element={<Dashboard />} />
+                  <Route path="/lesson/:lessonId" element={<LessonScreen />} />
+                  <Route path="/stories" element={<StoryHub />} />
+                  <Route path="/challenges" element={<ChallengeHub />} />
+                  <Route path="/leaderboard" element={<EnhancedLeaderboard />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/settings" element={<Settings />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </div>
+              <BottomNavigation />
+            </BrowserRouter>
+          </TooltipProvider>
+        </QueryClientProvider>
+      </LanguageProvider>
+    </ErrorBoundary>
   );
 };
 

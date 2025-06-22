@@ -5,12 +5,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Volume2, Heart, Star, Check, X, Mic, BookOpen, VolumeX } from 'lucide-react';
+import { ArrowLeft, Heart, Star, Check, X } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { lessonDataService, LessonQuestion } from '@/services/lessonDataService';
-import { ttsService } from '@/services/textToSpeechService';
+import { lessonDataService } from '@/services/lessonDataService';
 import { toast } from "@/hooks/use-toast";
 import Header from './Header';
+import AudioManager from './audio/AudioManager';
+import LoadingSpinner from './common/LoadingSpinner';
 
 const LessonScreen = () => {
   const { lessonId } = useParams();
@@ -24,14 +25,36 @@ const LessonScreen = () => {
   const [progress, setProgress] = useState(0);
   const [showResult, setShowResult] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
-  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const lessonData = lessonDataService.getLessonById(lessonId || '1');
   
+  useEffect(() => {
+    // Simulate lesson loading
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (lessonData) {
+      setProgress((currentQuestion / lessonData.questions.length) * 100);
+    }
+  }, [currentQuestion, lessonData]);
+  
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
+        <LoadingSpinner size="lg" text={language === 'fr' ? 'Chargement...' : 'Loading...'} />
+      </div>
+    );
+  }
+
   if (!lessonData) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
-        <Card className="p-6 text-center">
+        <Card className="p-6 text-center max-w-md mx-4">
           <CardContent>
             <h2 className="text-xl font-bold text-gray-800 mb-4">
               {language === 'fr' ? 'Leçon non trouvée' : 'Lesson Not Found'}
@@ -48,10 +71,6 @@ const LessonScreen = () => {
   const currentQ = lessonData.questions[currentQuestion];
   const totalQuestions = lessonData.questions.length;
 
-  useEffect(() => {
-    setProgress((currentQuestion / totalQuestions) * 100);
-  }, [currentQuestion, totalQuestions]);
-
   const handleAnswerSelect = (answer: string) => {
     setSelectedAnswer(answer);
   };
@@ -63,10 +82,6 @@ const LessonScreen = () => {
     
     if (correct) {
       setXp(prev => prev + 10);
-      // Play success sound or pronunciation
-      if (currentQ.audioText && ttsService.hasApiKey()) {
-        handlePlayAudio(currentQ.audioText);
-      }
     } else {
       setHearts(prev => Math.max(0, prev - 1));
     }
@@ -85,35 +100,6 @@ const LessonScreen = () => {
         description: language === 'fr' ? `Vous avez gagné ${xp} XP !` : `You earned ${xp} XP!`
       });
       navigate('/', { state: { lessonCompleted: true, earnedXP: xp } });
-    }
-  };
-
-  const handlePlayAudio = async (text: string) => {
-    if (!ttsService.hasApiKey()) {
-      toast({
-        title: language === 'fr' ? 'Configuration requise' : 'Setup Required',
-        description: language === 'fr' ? 'Configurez votre clé API dans les paramètres pour utiliser la synthèse vocale' : 'Configure your API key in settings to use text-to-speech',
-        variant: "destructive"
-      });
-      return;
-    }
-
-    setIsPlayingAudio(true);
-    try {
-      await ttsService.speak(text);
-    } catch (error) {
-      console.error('TTS Error:', error);
-    } finally {
-      setIsPlayingAudio(false);
-    }
-  };
-
-  const getQuestionTypeIcon = (type: string) => {
-    switch (type) {
-      case 'listening': return <Volume2 className="w-4 h-4" />;
-      case 'speaking': return <Mic className="w-4 h-4" />;
-      case 'translation': return <BookOpen className="w-4 h-4" />;
-      default: return <Check className="w-4 h-4" />;
     }
   };
 
@@ -164,30 +150,16 @@ const LessonScreen = () => {
             <Card className="mb-6 shadow-lg border-0 bg-white/90 backdrop-blur-sm">
               <CardHeader className="pb-4">
                 <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center space-x-2">
-                    <Badge className={getDifficultyColor(currentQ.difficulty)}>
-                      {getQuestionTypeIcon(currentQ.type)}
-                      <span className="ml-1 capitalize">{currentQ.type.replace('-', ' ')}</span>
-                    </Badge>
-                    <Badge variant="outline" className={getDifficultyColor(currentQ.difficulty)}>
-                      {currentQ.difficulty}
-                    </Badge>
-                  </div>
+                  <Badge className={getDifficultyColor(currentQ.difficulty)}>
+                    {currentQ.type.replace('-', ' ')}
+                  </Badge>
                   
                   {currentQ.audioText && (
-                    <Button
-                      variant="outline"
+                    <AudioManager 
+                      text={currentQ.audioText}
                       size="sm"
-                      onClick={() => handlePlayAudio(currentQ.audioText!)}
-                      disabled={isPlayingAudio}
-                      className="bg-blue-50 hover:bg-blue-100 border-blue-200"
-                    >
-                      {isPlayingAudio ? (
-                        <VolumeX className="w-4 h-4" />
-                      ) : (
-                        <Volume2 className="w-4 h-4" />
-                      )}
-                    </Button>
+                      variant="outline"
+                    />
                   )}
                 </div>
                 
@@ -209,15 +181,15 @@ const LessonScreen = () => {
                     variant="outline"
                     className={`w-full p-4 h-auto text-left justify-start transition-all duration-200 ${
                       selectedAnswer === option 
-                        ? 'bg-blue-50 border-blue-300 shadow-md' 
-                        : 'hover:bg-gray-50'
+                        ? 'bg-blue-50 border-blue-300 shadow-md scale-105' 
+                        : 'hover:bg-gray-50 hover:scale-102'
                     }`}
                     onClick={() => handleAnswerSelect(option)}
                   >
                     <div className="flex items-center space-x-3">
-                      <div className={`w-4 h-4 rounded-full border-2 ${
+                      <div className={`w-4 h-4 rounded-full border-2 transition-all duration-200 ${
                         selectedAnswer === option 
-                          ? 'bg-blue-500 border-blue-500' 
+                          ? 'bg-blue-500 border-blue-500 scale-110' 
                           : 'border-gray-300'
                       }`}>
                         {selectedAnswer === option && (
@@ -235,22 +207,24 @@ const LessonScreen = () => {
             <Button
               onClick={handleSubmit}
               disabled={!selectedAnswer}
-              className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold py-4 text-lg shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold py-4 text-lg shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transform transition-all duration-200 hover:scale-105 active:scale-95"
             >
               {language === 'fr' ? 'Vérifier' : 'Check'}
             </Button>
           </>
         ) : (
           /* Result Card */
-          <Card className={`shadow-xl border-0 ${isCorrect ? 'bg-gradient-to-br from-green-50 to-emerald-50' : 'bg-gradient-to-br from-red-50 to-pink-50'}`}>
+          <Card className={`shadow-xl border-0 transform transition-all duration-500 ${
+            isCorrect ? 'bg-gradient-to-br from-green-50 to-emerald-50' : 'bg-gradient-to-br from-red-50 to-pink-50'
+          }`}>
             <CardContent className="p-6 text-center">
               <div className="mb-4">
                 {isCorrect ? (
-                  <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-3 animate-bounce-in">
                     <Check className="w-8 h-8 text-white" />
                   </div>
                 ) : (
-                  <div className="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <div className="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-3 animate-bounce-in">
                     <X className="w-8 h-8 text-white" />
                   </div>
                 )}
@@ -279,8 +253,20 @@ const LessonScreen = () => {
                   </div>
                 )}
                 
+                {/* Audio for correct answer */}
+                {(isCorrect || !isCorrect) && currentQ.audioText && (
+                  <div className="mt-3">
+                    <AudioManager 
+                      text={currentQ.audioText}
+                      autoPlay={isCorrect}
+                      size="md"
+                      className="mx-auto"
+                    />
+                  </div>
+                )}
+                
                 {isCorrect && (
-                  <Badge className="mt-3 bg-yellow-500 text-white">
+                  <Badge className="mt-3 bg-yellow-500 text-white animate-pulse-glow">
                     +10 XP
                   </Badge>
                 )}
@@ -288,7 +274,7 @@ const LessonScreen = () => {
               
               <Button
                 onClick={handleNext}
-                className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-bold py-4 text-lg"
+                className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-bold py-4 text-lg transform transition-all duration-200 hover:scale-105 active:scale-95"
               >
                 {currentQuestion < totalQuestions - 1 
                   ? (language === 'fr' ? 'Suivant' : 'Continue')
