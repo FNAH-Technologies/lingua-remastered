@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Lock, Star, Play, CheckCircle, MessageCircle, Package, Coffee, Clock, Palette, Utensils, Home } from 'lucide-react';
+import { Lock, Star, Play, CheckCircle, MessageCircle, Hash, Users, Clock, Palette, Utensils, Home } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -9,6 +9,7 @@ interface LessonNode {
   id: string;
   title: string;
   titleFr: string;
+  titleEwondo: string;
   status: 'locked' | 'available' | 'completed';
   stars: number;
   maxStars: number;
@@ -24,8 +25,9 @@ const DuolingoProgressTree = () => {
   const lessons: LessonNode[] = [
     {
       id: '1',
-      title: 'Basic Communication',
-      titleFr: 'Communication de base',
+      title: 'Basic Greetings',
+      titleFr: 'Salutations de base',
+      titleEwondo: 'Mbolo (Salutations)',
       status: 'completed',
       stars: 3,
       maxStars: 3,
@@ -37,28 +39,31 @@ const DuolingoProgressTree = () => {
       id: '2',
       title: 'Numbers & Counting',
       titleFr: 'Nombres et comptage',
+      titleEwondo: 'Enyañ (Nombres)',
       status: 'completed',
       stars: 2,
       maxStars: 3,
-      icon: Package,
+      icon: Hash,
       color: 'from-blue-500 to-cyan-600',
       position: { x: 30, y: 75 }
     },
     {
       id: '3',
-      title: 'Family & People',
-      titleFr: 'Famille et personnes',
+      title: 'Family & Relations',
+      titleFr: 'Famille et relations',
+      titleEwondo: 'Ndap (Famille)',
       status: 'available',
       stars: 1,
       maxStars: 3,
-      icon: Home,
+      icon: Users,
       color: 'from-purple-500 to-pink-600',
       position: { x: 70, y: 65 }
     },
     {
       id: '4',
-      title: 'Daily Activities',
-      titleFr: 'Activités quotidiennes',
+      title: 'Daily Life',
+      titleFr: 'Vie quotidienne',
+      titleEwondo: 'Nduan asɔ́b (Vie quotidienne)',
       status: 'available',
       stars: 0,
       maxStars: 3,
@@ -68,8 +73,9 @@ const DuolingoProgressTree = () => {
     },
     {
       id: '5',
-      title: 'Colors & Descriptions',
-      titleFr: 'Couleurs et descriptions',
+      title: 'Colors & Nature',
+      titleFr: 'Couleurs et nature',
+      titleEwondo: 'Mvɔ́ñ ne Dzom (Couleurs et Nature)',
       status: 'locked',
       stars: 0,
       maxStars: 3,
@@ -79,8 +85,9 @@ const DuolingoProgressTree = () => {
     },
     {
       id: '6',
-      title: 'Food & Dining',
-      titleFr: 'Nourriture et repas',
+      title: 'Food & Culture',
+      titleFr: 'Nourriture et culture',
+      titleEwondo: 'Bídí ne Bikukú (Nourriture et Culture)',
       status: 'locked',
       stars: 0,
       maxStars: 3,
@@ -90,12 +97,13 @@ const DuolingoProgressTree = () => {
     },
     {
       id: '7',
-      title: 'Shopping',
-      titleFr: 'Achats',
+      title: 'Village Life',
+      titleFr: 'Vie au village',
+      titleEwondo: 'Nduan Dzal (Vie au Village)',
       status: 'locked',
       stars: 0,
       maxStars: 3,
-      icon: Coffee,
+      icon: Home,
       color: 'from-yellow-500 to-orange-600',
       position: { x: 55, y: 5 }
     }
@@ -129,32 +137,39 @@ const DuolingoProgressTree = () => {
   };
 
   return (
-    <div className="relative w-full h-[450px] bg-gradient-to-b from-green-400 via-blue-400 to-purple-500 rounded-3xl overflow-hidden shadow-xl">
-      {/* Enhanced background with floating elements */}
+    <div className="relative w-full h-[500px] bg-gradient-to-b from-amber-400 via-orange-400 to-red-500 rounded-3xl overflow-hidden shadow-xl">
+      {/* Enhanced African-inspired background */}
       <div className="absolute inset-0">
-        {/* Floating decorative elements */}
-        <div className="absolute top-8 left-8 w-8 h-8 bg-white/30 rounded-full animate-bounce" style={{ animationDelay: '0s', animationDuration: '3s' }}></div>
-        <div className="absolute top-16 right-12 w-6 h-6 bg-yellow-300/40 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute bottom-20 left-12 w-7 h-7 bg-pink-300/35 rounded-full animate-bounce" style={{ animationDelay: '2s', animationDuration: '2.5s' }}></div>
-        <div className="absolute bottom-32 right-16 w-5 h-5 bg-white/40 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
-        <div className="absolute top-1/3 left-1/4 w-4 h-4 bg-cyan-300/30 rounded-full animate-bounce" style={{ animationDelay: '1.5s', animationDuration: '4s' }}></div>
-        <div className="absolute top-2/3 right-1/3 w-6 h-6 bg-emerald-300/25 rounded-full animate-pulse" style={{ animationDelay: '2.5s' }}></div>
+        {/* Traditional pattern overlay */}
+        <div className="absolute inset-0" style={{
+          backgroundImage: `radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 2px, transparent 2px),
+                           radial-gradient(circle at 75% 75%, rgba(255,255,255,0.1) 2px, transparent 2px)`,
+          backgroundSize: '40px 40px'
+        }}></div>
         
-        {/* Gradient overlays for depth */}
-        <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent"></div>
+        {/* Floating decorative elements with African colors */}
+        <div className="absolute top-8 left-8 w-8 h-8 bg-green-400/40 rounded-full animate-bounce" style={{ animationDelay: '0s', animationDuration: '3s' }}></div>
+        <div className="absolute top-16 right-12 w-6 h-6 bg-yellow-300/50 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute bottom-20 left-12 w-7 h-7 bg-red-400/40 rounded-full animate-bounce" style={{ animationDelay: '2s', animationDuration: '2.5s' }}></div>
+        <div className="absolute bottom-32 right-16 w-5 h-5 bg-white/50 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+        <div className="absolute top-1/3 left-1/4 w-4 h-4 bg-green-300/40 rounded-full animate-bounce" style={{ animationDelay: '1.5s', animationDuration: '4s' }}></div>
+        <div className="absolute top-2/3 right-1/3 w-6 h-6 bg-orange-300/35 rounded-full animate-pulse" style={{ animationDelay: '2.5s' }}></div>
+        
+        {/* Enhanced gradient overlays for depth */}
+        <div className="absolute inset-0 bg-gradient-to-br from-white/15 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
       </div>
 
-      {/* Enhanced SVG Trail with glow effect */}
+      {/* Enhanced SVG Trail with African-inspired colors */}
       <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
         <defs>
-          <linearGradient id="trailGradient" x1="0%" y1="100%" x2="0%" y2="0%">
-            <stop offset="0%" stopColor="rgba(255,255,255,0.9)" />
-            <stop offset="50%" stopColor="rgba(255,255,255,0.7)" />
-            <stop offset="100%" stopColor="rgba(255,255,255,0.5)" />
+          <linearGradient id="africanTrailGradient" x1="0%" y1="100%" x2="0%" y2="0%">
+            <stop offset="0%" stopColor="rgba(255,255,255,0.95)" />
+            <stop offset="50%" stopColor="rgba(254,240,138,0.8)" />
+            <stop offset="100%" stopColor="rgba(34,197,94,0.6)" />
           </linearGradient>
-          <filter id="glow">
-            <feGaussianBlur stdDeviation="1" result="coloredBlur"/>
+          <filter id="africanGlow">
+            <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
             <feMerge> 
               <feMergeNode in="coloredBlur"/>
               <feMergeNode in="SourceGraphic"/>
@@ -163,17 +178,17 @@ const DuolingoProgressTree = () => {
         </defs>
         <path
           d={generatePath()}
-          stroke="url(#trailGradient)"
-          strokeWidth="1.2"
-          strokeDasharray="3,2"
+          stroke="url(#africanTrailGradient)"
+          strokeWidth="1.5"
+          strokeDasharray="4,3"
           fill="none"
-          filter="url(#glow)"
+          filter="url(#africanGlow)"
           className="animate-pulse"
-          style={{ animationDuration: '4s' }}
+          style={{ animationDuration: '3s' }}
         />
       </svg>
 
-      {/* Lesson Nodes with enhanced interactions */}
+      {/* Lesson Nodes with enhanced styling */}
       {lessons.map((lesson) => {
         const IconComponent = lesson.icon;
         
@@ -187,43 +202,46 @@ const DuolingoProgressTree = () => {
             }}
             onClick={() => handleLessonClick(lesson)}
           >
-            {/* Node Circle with enhanced styling */}
-            <div className={`relative w-16 h-16 rounded-full border-4 border-white shadow-xl transition-all duration-300 ${
+            {/* Enhanced Node Circle */}
+            <div className={`relative w-18 h-18 rounded-full border-4 border-white shadow-2xl transition-all duration-300 ${
               lesson.status === 'locked'
-                ? 'bg-gray-400 shadow-gray-300/50'
+                ? 'bg-gray-400 shadow-gray-400/50'
                 : lesson.status === 'completed'
-                ? `bg-gradient-to-br ${lesson.color} shadow-green-400/30`
-                : `bg-gradient-to-br ${lesson.color} shadow-blue-400/30`
-            } ${lesson.status !== 'locked' ? 'hover:shadow-2xl hover:scale-105 group-hover:border-yellow-300' : ''}`}>
+                ? `bg-gradient-to-br ${lesson.color} shadow-green-500/40`
+                : `bg-gradient-to-br ${lesson.color} shadow-blue-500/40`
+            } ${lesson.status !== 'locked' ? 'hover:shadow-2xl hover:scale-110 group-hover:border-yellow-400' : ''}`}>
               
               {/* Animated ring for available lessons */}
               {lesson.status === 'available' && (
-                <div className="absolute inset-0 rounded-full border-2 border-yellow-300 animate-ping opacity-75"></div>
+                <>
+                  <div className="absolute inset-0 rounded-full border-2 border-yellow-400 animate-ping opacity-75"></div>
+                  <div className="absolute inset-0 rounded-full border-1 border-yellow-300 animate-pulse opacity-50"></div>
+                </>
               )}
               
               {/* Icon with better positioning */}
               <div className="absolute inset-0 flex items-center justify-center">
                 {lesson.status === 'locked' ? (
-                  <Lock className="w-7 h-7 text-gray-600" />
+                  <Lock className="w-8 h-8 text-gray-600" />
                 ) : lesson.status === 'completed' ? (
-                  <CheckCircle className="w-7 h-7 text-white drop-shadow-lg" />
+                  <CheckCircle className="w-8 h-8 text-white drop-shadow-lg" />
                 ) : (
-                  <IconComponent className="w-7 h-7 text-white drop-shadow-lg" />
+                  <IconComponent className="w-8 h-8 text-white drop-shadow-lg" />
                 )}
               </div>
 
               {/* Enhanced Level Badge */}
-              <div className="absolute -top-2 -right-2 w-7 h-7 bg-white rounded-full flex items-center justify-center shadow-lg border-2 border-gray-100 group-hover:border-yellow-300 transition-all duration-300">
-                <span className="text-xs font-bold text-gray-800">{lesson.id}</span>
+              <div className="absolute -top-2 -right-2 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-xl border-2 border-yellow-200 group-hover:border-yellow-400 transition-all duration-300">
+                <span className="text-sm font-bold text-gray-800">{lesson.id}</span>
               </div>
 
               {/* Enhanced Stars */}
               {lesson.status !== 'locked' && lesson.stars > 0 && (
-                <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-0.5">
+                <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 flex space-x-0.5">
                   {Array.from({ length: lesson.stars }, (_, i) => (
                     <Star
                       key={i}
-                      className="w-3 h-3 fill-yellow-400 text-yellow-400 drop-shadow-sm"
+                      className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400 drop-shadow-sm"
                     />
                   ))}
                 </div>
@@ -231,22 +249,25 @@ const DuolingoProgressTree = () => {
 
               {/* Completion glow effect */}
               {lesson.status === 'completed' && (
-                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-emerald-400/20 to-green-400/20 animate-pulse"></div>
+                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-emerald-400/30 to-green-400/30 animate-pulse"></div>
               )}
             </div>
 
-            {/* Enhanced Hover Tooltip */}
-            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-10">
-              <div className="bg-white/95 backdrop-blur-sm rounded-xl px-4 py-3 shadow-xl border border-white/30 min-w-max">
-                <p className="text-sm font-bold text-gray-800">
+            {/* Enhanced Hover Tooltip with Ewondo */}
+            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-4 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-10">
+              <div className="bg-white/98 backdrop-blur-md rounded-2xl px-5 py-4 shadow-2xl border border-white/40 min-w-max max-w-xs">
+                <p className="text-sm font-bold text-gray-800 mb-1">
                   {language === 'fr' ? lesson.titleFr : lesson.title}
                 </p>
+                <p className="text-xs text-orange-600 font-semibold mb-2">
+                  {lesson.titleEwondo}
+                </p>
                 {lesson.status !== 'locked' && (
-                  <div className="flex items-center space-x-1 mt-1.5">
+                  <div className="flex items-center space-x-1 mb-2">
                     {Array.from({ length: lesson.maxStars }, (_, i) => (
                       <Star
                         key={i}
-                        className={`w-2.5 h-2.5 ${
+                        className={`w-3 h-3 ${
                           i < lesson.stars
                             ? 'fill-yellow-400 text-yellow-400'
                             : 'text-gray-300'
@@ -255,7 +276,7 @@ const DuolingoProgressTree = () => {
                     ))}
                   </div>
                 )}
-                <div className="text-xs text-gray-600 mt-1">
+                <div className="text-xs text-gray-600">
                   {lesson.status === 'completed' 
                     ? (language === 'fr' ? 'Terminé!' : 'Completed!')
                     : lesson.status === 'available'
@@ -264,23 +285,28 @@ const DuolingoProgressTree = () => {
                   }
                 </div>
               </div>
-              {/* Tooltip arrow */}
-              <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-white/95"></div>
+              {/* Enhanced tooltip arrow */}
+              <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-6 border-r-6 border-t-6 border-transparent border-t-white/98"></div>
             </div>
           </div>
         );
       })}
 
-      {/* Enhanced Character Mascot */}
-      <div className="absolute bottom-6 right-6 w-14 h-14 bg-white/95 rounded-full flex items-center justify-center shadow-xl animate-bounce cursor-pointer hover:scale-110 transition-transform duration-300">
-        <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center shadow-lg">
-          <span className="text-white text-lg">🦜</span>
+      {/* African-inspired Character Mascot */}
+      <div className="absolute bottom-6 right-6 w-16 h-16 bg-white/98 rounded-full flex items-center justify-center shadow-2xl animate-bounce cursor-pointer hover:scale-110 transition-transform duration-300 border-2 border-yellow-300">
+        <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-600 rounded-full flex items-center justify-center shadow-lg">
+          <span className="text-white text-xl">🌍</span>
         </div>
       </div>
 
-      {/* Progress indicator */}
-      <div className="absolute top-4 left-4 bg-white/90 rounded-full px-3 py-1 text-xs font-semibold text-gray-800 shadow-lg">
-        {lessons.filter(l => l.status === 'completed').length}/{lessons.length} {language === 'fr' ? 'Terminé' : 'Complete'}
+      {/* Enhanced progress indicator */}
+      <div className="absolute top-4 left-4 bg-white/95 rounded-full px-4 py-2 text-sm font-bold text-gray-800 shadow-xl border border-yellow-200">
+        {lessons.filter(l => l.status === 'completed').length}/{lessons.length} {language === 'fr' ? 'Ewondo Terminé' : 'Ewondo Complete'}
+      </div>
+
+      {/* Language indicator */}
+      <div className="absolute top-4 right-4 bg-gradient-to-r from-green-500 to-yellow-500 rounded-full px-3 py-1 text-xs font-bold text-white shadow-lg">
+        Ewondo
       </div>
     </div>
   );

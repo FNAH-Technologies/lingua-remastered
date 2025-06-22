@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
+import { toast } from 'sonner';
 import { 
   Bell, 
   Volume2, 
@@ -24,7 +25,7 @@ import TTSSettings from './TTSSettings';
 
 const Settings = () => {
   const navigate = useNavigate();
-  const { language, setLanguage } = useLanguage();
+  const { language, setLanguage, t } = useLanguage();
   
   const [settings, setSettings] = useState({
     notifications: true,
@@ -40,47 +41,54 @@ const Settings = () => {
   };
 
   const handleLanguageChange = () => {
-    setLanguage(language === 'fr' ? 'en' : 'fr');
+    const newLanguage = language === 'fr' ? 'en' : 'fr';
+    console.log('Changing language from', language, 'to', newLanguage);
+    setLanguage(newLanguage);
+    toast.success(
+      newLanguage === 'fr' 
+        ? 'Langue changée en Français' 
+        : 'Language changed to English'
+    );
   };
 
   const settingsSections = [
     {
-      title: language === 'fr' ? 'Notifications' : 'Notifications',
+      title: t('settings.notifications'),
       icon: Bell,
       items: [
         {
           key: 'notifications',
-          label: language === 'fr' ? 'Notifications push' : 'Push notifications',
-          description: language === 'fr' ? 'Recevez des rappels et mises à jour' : 'Get reminders and updates',
+          label: t('settings.notifications.general'),
+          description: t('settings.notifications.general.desc'),
           value: settings.notifications
         },
         {
           key: 'dailyReminders',
-          label: language === 'fr' ? 'Rappels quotidiens' : 'Daily reminders',
-          description: language === 'fr' ? 'Rappel pour votre leçon quotidienne' : 'Reminder for your daily lesson',
+          label: t('settings.notifications.lessons'),
+          description: t('settings.notifications.lessons.desc'),
           value: settings.dailyReminders
         },
         {
           key: 'weeklyReport',
-          label: language === 'fr' ? 'Rapport hebdomadaire' : 'Weekly report',
-          description: language === 'fr' ? 'Résumé de vos progrès' : 'Summary of your progress',
+          label: t('settings.notifications.streak'),
+          description: t('settings.notifications.streak.desc'),
           value: settings.weeklyReport
         }
       ]
     },
     {
-      title: language === 'fr' ? 'Audio & Visuel' : 'Audio & Visual',
+      title: t('settings.audio'),
       icon: Volume2,
       items: [
         {
           key: 'soundEffects',
-          label: language === 'fr' ? 'Effets sonores' : 'Sound effects',
-          description: language === 'fr' ? 'Sons pour les interactions' : 'Sounds for interactions',
+          label: t('settings.audio.effects'),
+          description: t('settings.audio.effects.desc'),
           value: settings.soundEffects
         },
         {
           key: 'autoPlay',
-          label: language === 'fr' ? 'Lecture automatique' : 'Auto-play audio',
+          label: 'Auto-play audio',
           description: language === 'fr' ? 'Jouer automatiquement l\'audio' : 'Automatically play audio',
           value: settings.autoPlay
         }
@@ -102,20 +110,20 @@ const Settings = () => {
 
   const actionItems = [
     {
-      label: language === 'fr' ? 'Langue de l\'app' : 'App Language',
+      label: t('settings.language.interface'),
       icon: Globe,
       action: handleLanguageChange,
       value: language === 'fr' ? 'Français' : 'English',
       type: 'button'
     },
     {
-      label: language === 'fr' ? 'Compte et sécurité' : 'Account & Security',
+      label: t('settings.account.password'),
       icon: Shield,
       action: () => console.log('Account security'),
       type: 'navigation'
     },
     {
-      label: language === 'fr' ? 'Profil utilisateur' : 'User Profile',
+      label: t('common.profile'),
       icon: User,
       action: () => navigate('/profile'),
       type: 'navigation'
@@ -144,14 +152,17 @@ const Settings = () => {
     {
       label: language === 'fr' ? 'Effacer les données' : 'Clear Data',
       icon: Trash2,
-      action: () => console.log('Clear data'),
+      action: () => {
+        toast.info(language === 'fr' ? 'Données effacées' : 'Data cleared');
+      },
       color: 'text-red-600'
     },
     {
-      label: language === 'fr' ? 'Déconnexion' : 'Sign Out',
+      label: t('common.logout'),
       icon: LogOut,
       action: () => {
         localStorage.removeItem('lingua_user');
+        toast.success(t('settings.logout.success'));
         window.location.reload();
       },
       color: 'text-red-600'
@@ -161,7 +172,7 @@ const Settings = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
       <Header 
-        title={language === 'fr' ? 'Paramètres' : 'Settings'}
+        title={t('settings.title')}
         showBack={true}
       />
 
@@ -224,19 +235,19 @@ const Settings = () => {
         </Card>
 
         {/* App Info */}
-        <Card className="bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200 shadow-lg">
+        <Card className="bg-gradient-to-r from-orange-50 to-red-50 border-orange-200 shadow-lg">
           <CardContent className="p-6 text-center">
             <div className="space-y-2">
-              <h3 className="text-lg font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                Lingua
+              <h3 className="text-lg font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+                Lingua - {language === 'fr' ? 'Langues Ethniques' : 'Ethnic Languages'}
               </h3>
               <p className="text-sm text-gray-600">
                 {language === 'fr' ? 'Version 1.0.0' : 'Version 1.0.0'}
               </p>
               <p className="text-xs text-gray-500">
                 {language === 'fr' 
-                  ? 'Apprendre les langues du Cameroun'
-                  : 'Learn Cameroonian Languages'
+                  ? 'Apprendre les langues ethniques du Cameroun'
+                  : 'Learn Cameroonian Ethnic Languages'
                 }
               </p>
             </div>

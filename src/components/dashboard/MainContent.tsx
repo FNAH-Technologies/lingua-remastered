@@ -6,7 +6,7 @@ import EnhancedProgressTree from '../EnhancedProgressTree';
 import DuolingoProgressTree from '../DuolingoProgressTree';
 
 const MainContent = () => {
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
 
   return (
     <div className="space-y-6">
@@ -20,10 +20,10 @@ const MainContent = () => {
               </div>
               <div>
                 <span className="text-gray-900 font-bold text-xl">
-                  {language === 'fr' ? 'Carte de Progression' : 'Progress Map'}
+                  {t('dashboard.progress.map')}
                 </span>
                 <p className="text-sm text-gray-500 font-normal mt-1">
-                  {language === 'fr' ? 'Suivez votre parcours d\'apprentissage' : 'Follow your learning journey'}
+                  {language === 'fr' ? 'Suivez votre parcours d\'apprentissage ethnique' : 'Follow your ethnic language learning journey'}
                 </p>
               </div>
             </CardTitle>
@@ -44,10 +44,10 @@ const MainContent = () => {
               </div>
               <div>
                 <span className="text-gray-900 font-bold text-xl">
-                  {language === 'fr' ? 'Leçons Détaillées' : 'Detailed Lessons'}
+                  {t('dashboard.detailed.lessons')}
                 </span>
                 <p className="text-sm text-gray-500 font-normal mt-1">
-                  {language === 'fr' ? 'Explorez en profondeur chaque sujet' : 'Explore each topic in depth'}
+                  {language === 'fr' ? 'Explorez en profondeur chaque sujet ethnique' : 'Explore each ethnic topic in depth'}
                 </p>
               </div>
             </CardTitle>
