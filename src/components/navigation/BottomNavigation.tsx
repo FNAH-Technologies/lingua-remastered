@@ -48,29 +48,57 @@ const BottomNavigation = () => {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 nav-ios shadow-ios-large z-50 safe-bottom">
-      <div className="flex items-center justify-around py-3 px-6 max-w-md mx-auto">
+      <div className="flex items-center justify-around py-2 px-4 max-w-md mx-auto relative">
+        {/* Animated background indicator */}
+        <div 
+          className="absolute top-2 h-12 w-16 bg-white/90 rounded-2xl shadow-ios-medium transition-all duration-500 ease-out backdrop-blur-20"
+          style={{
+            left: `${navItems.findIndex(item => location.pathname === item.path) * 20 + 10}%`,
+            transform: 'translateX(-50%)',
+            opacity: navItems.some(item => location.pathname === item.path) ? 1 : 0
+          }}
+        />
+        
         {navItems.map((item, index) => {
           const isActive = location.pathname === item.path;
           return (
             <button
               key={index}
               onClick={() => handleNavigation(item.path)}
-              className={`flex flex-col items-center space-y-1 p-3 rounded-2xl transition-all duration-300 ripple-ios touch-feedback ${
+              className={`relative flex flex-col items-center space-y-1 p-3 rounded-2xl transition-all duration-300 transform z-10 ${
                 isActive 
-                  ? 'bg-white/80 shadow-ios-small scale-110 backdrop-blur-20' 
-                  : 'hover:bg-white/40 active:scale-95'
+                  ? 'scale-110 -translate-y-1' 
+                  : 'hover:scale-105 active:scale-95'
               }`}
             >
-              <div className={`w-6 h-6 ${isActive ? item.color : 'text-gray-400'} transition-all duration-300 ${isActive ? 'animate-ios-pulse' : ''}`}>
-                <item.icon className="w-full h-full" strokeWidth={isActive ? 2.5 : 2} />
-              </div>
-              <span className={`text-xs font-semibold ${
+              <div className={`w-6 h-6 transition-all duration-300 ${
                 isActive ? item.color : 'text-gray-400'
-              } transition-all duration-300`}>
+              } ${isActive ? 'animate-ios-pulse' : ''}`}>
+                <item.icon 
+                  className="w-full h-full" 
+                  strokeWidth={isActive ? 2.5 : 2}
+                  style={{
+                    filter: isActive ? 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' : 'none'
+                  }}
+                />
+              </div>
+              <span className={`text-xs font-semibold transition-all duration-300 ${
+                isActive ? `${item.color} opacity-100` : 'text-gray-400 opacity-80'
+              }`}>
                 {item.label}
               </span>
+              
+              {/* Active indicator dot */}
               {isActive && (
-                <div className={`w-1 h-1 ${item.color.replace('text-', 'bg-')} rounded-full animate-ios-pulse`}></div>
+                <div 
+                  className={`absolute -bottom-1 w-1 h-1 ${item.color.replace('text-', 'bg-')} rounded-full animate-ios-pulse`}
+                  style={{
+                    boxShadow: `0 0 8px ${item.color.includes('blue') ? '#3b82f6' : 
+                                        item.color.includes('green') ? '#10b981' :
+                                        item.color.includes('orange') ? '#f59e0b' :
+                                        item.color.includes('purple') ? '#8b5cf6' : '#ec4899'}`
+                  }}
+                />
               )}
             </button>
           );

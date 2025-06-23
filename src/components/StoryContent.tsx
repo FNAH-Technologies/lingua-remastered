@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { BookOpen, Clock, Star, Volume2 } from 'lucide-react';
+import { BookOpen, Clock, Star, Volume2, Globe, MapPin } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { ttsService } from '@/services/textToSpeechService';
 import { toast } from "@/hooks/use-toast";
@@ -16,10 +16,13 @@ interface Story {
   level: 'beginner' | 'intermediate' | 'advanced';
   readingTime: number;
   category: string;
+  culturalContext: string;
+  region: string;
   vocabulary: Array<{
     word: string;
     translation: string;
     definition: string;
+    culturalNote?: string;
   }>;
 }
 
@@ -36,10 +39,12 @@ const StoryContent = () => {
       level: 'beginner',
       readingTime: 3,
       category: 'travel',
+      culturalContext: 'French café culture',
+      region: 'France - Île-de-France',
       vocabulary: [
-        { word: 'beautiful', translation: 'belle/beau', definition: 'pleasing to look at' },
-        { word: 'friendly', translation: 'aimable', definition: 'kind and pleasant' },
-        { word: 'confident', translation: 'confiant(e)', definition: 'feeling sure about yourself' }
+        { word: 'beautiful', translation: 'belle/beau', definition: 'pleasing to look at', culturalNote: 'Often used to describe French architecture' },
+        { word: 'friendly', translation: 'aimable', definition: 'kind and pleasant', culturalNote: 'Important value in French hospitality' },
+        { word: 'confident', translation: 'confiant(e)', definition: 'feeling sure about yourself', culturalNote: 'Key to language learning success' }
       ]
     },
     {
@@ -51,10 +56,12 @@ const StoryContent = () => {
       level: 'intermediate',
       readingTime: 5,
       category: 'culture',
+      culturalContext: 'Traditional French markets',
+      region: 'France - Various regions',
       vocabulary: [
-        { word: 'bustling', translation: 'animé', definition: 'busy and full of activity' },
-        { word: 'vendors', translation: 'vendeurs', definition: 'people who sell things' },
-        { word: 'specialty', translation: 'spécialité', definition: 'something special or unique' }
+        { word: 'bustling', translation: 'animé', definition: 'busy and full of activity', culturalNote: 'Describes typical French market atmosphere' },
+        { word: 'vendors', translation: 'vendeurs', definition: 'people who sell things', culturalNote: 'Often family businesses passed down generations' },
+        { word: 'specialty', translation: 'spécialité', definition: 'something special or unique', culturalNote: 'Each French region has its own specialties' }
       ]
     }
   ];
@@ -78,44 +85,68 @@ const StoryContent = () => {
 
   const getLevelColor = (level: string) => {
     switch (level) {
-      case 'beginner': return 'bg-green-100 text-green-700';
-      case 'intermediate': return 'bg-yellow-100 text-yellow-700';
-      case 'advanced': return 'bg-red-100 text-red-700';
-      default: return 'bg-gray-100 text-gray-700';
+      case 'beginner': return 'bg-green-100 text-green-700 border-green-200';
+      case 'intermediate': return 'bg-amber-100 text-amber-700 border-amber-200';
+      case 'advanced': return 'bg-red-100 text-red-700 border-red-200';
+      default: return 'bg-gray-100 text-gray-700 border-gray-200';
     }
   };
 
   return (
     <div className="space-y-6">
-      {stories.map((story) => (
-        <Card key={story.id} className="shadow-lg border-0 bg-white/90 backdrop-blur-sm">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-xl font-bold text-gray-800">
-                {language === 'fr' ? story.titleFr : story.title}
-              </CardTitle>
-              <div className="flex items-center space-x-2">
-                <Badge className={getLevelColor(story.level)}>
+      {stories.map((story, index) => (
+        <Card 
+          key={story.id} 
+          className="shadow-ios-card border-0 glass-ios backdrop-blur-20 animate-ios-slide-up"
+          style={{ animationDelay: `${index * 0.1}s` }}
+        >
+          <CardHeader className="pb-4">
+            <div className="flex items-start justify-between mb-4">
+              <div className="flex-1">
+                <CardTitle className="text-xl font-bold text-gray-800 mb-2 flex items-center">
+                  <Globe className="w-5 h-5 mr-2 text-orange-500" />
+                  {language === 'fr' ? story.titleFr : story.title}
+                </CardTitle>
+                <div className="flex items-center space-x-2 text-sm text-gray-600 mb-3">
+                  <MapPin className="w-4 h-4" />
+                  <span>{story.region}</span>
+                </div>
+              </div>
+              
+              <div className="flex flex-col items-end space-y-2">
+                <Badge className={`${getLevelColor(story.level)} border shadow-ios-small`}>
                   {story.level}
                 </Badge>
-                <Badge variant="outline" className="flex items-center space-x-1">
+                <Badge variant="outline" className="flex items-center space-x-1 bg-white/80 border-orange-200">
                   <Clock className="w-3 h-3" />
                   <span>{story.readingTime} min</span>
                 </Badge>
               </div>
             </div>
+
+            {/* Cultural Context */}
+            <div className="bg-orange-50 p-3 rounded-lg border border-orange-200 mb-4">
+              <p className="text-sm text-orange-800 flex items-center">
+                <BookOpen className="w-4 h-4 mr-2" />
+                <strong>{language === 'fr' ? 'Contexte culturel:' : 'Cultural Context:'}</strong>
+                <span className="ml-2">{story.culturalContext}</span>
+              </p>
+            </div>
           </CardHeader>
           
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-6">
             <div className="flex items-center justify-between">
-              <p className="text-sm text-gray-600 capitalize">
-                {language === 'fr' ? 'Catégorie' : 'Category'}: {story.category}
+              <p className="text-sm text-gray-600 capitalize flex items-center">
+                <span className="font-medium">{language === 'fr' ? 'Catégorie:' : 'Category:'}</span>
+                <span className="ml-2 bg-orange-100 text-orange-700 px-2 py-1 rounded-full text-xs">
+                  {story.category}
+                </span>
               </p>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => handleReadAloud(language === 'fr' ? story.contentFr : story.content)}
-                className="flex items-center space-x-1"
+                className="flex items-center space-x-2 shadow-ios-small hover:shadow-ios-medium transition-all duration-200"
               >
                 <Volume2 className="w-4 h-4" />
                 <span>{language === 'fr' ? 'Écouter' : 'Listen'}</span>
@@ -123,25 +154,35 @@ const StoryContent = () => {
             </div>
             
             <div className="prose max-w-none">
-              <p className="text-gray-700 leading-relaxed">
+              <p className="text-gray-700 leading-relaxed text-lg">
                 {language === 'fr' ? story.contentFr : story.content}
               </p>
             </div>
             
-            {/* Vocabulary Section */}
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <h4 className="font-semibold text-blue-900 mb-3 flex items-center">
-                <BookOpen className="w-4 h-4 mr-2" />
-                {language === 'fr' ? 'Vocabulaire clé' : 'Key Vocabulary'}
+            {/* Enhanced Vocabulary Section with Cultural Notes */}
+            <div className="bg-blue-50 p-6 rounded-xl border border-blue-200 shadow-ios-small">
+              <h4 className="font-semibold text-blue-900 mb-4 flex items-center text-lg">
+                <BookOpen className="w-5 h-5 mr-2" />
+                {language === 'fr' ? 'Vocabulaire culturel' : 'Cultural Vocabulary'}
               </h4>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-4">
                 {story.vocabulary.map((word, index) => (
-                  <div key={index} className="bg-white p-3 rounded-lg shadow-sm">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="font-medium text-blue-800">{word.word}</span>
-                      <span className="text-sm text-blue-600">{word.translation}</span>
+                  <div 
+                    key={index} 
+                    className="bg-white p-4 rounded-lg shadow-ios-small border border-blue-100 transform transition-all duration-200 hover:scale-102 hover:shadow-ios-medium"
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="font-semibold text-blue-800 text-lg">{word.word}</span>
+                      <span className="text-blue-600 font-medium">{word.translation}</span>
                     </div>
-                    <p className="text-xs text-gray-600">{word.definition}</p>
+                    <p className="text-gray-600 text-sm mb-2">{word.definition}</p>
+                    {word.culturalNote && (
+                      <div className="bg-orange-50 p-2 rounded border border-orange-200">
+                        <p className="text-xs text-orange-700">
+                          <strong>{language === 'fr' ? 'Note culturelle:' : 'Cultural Note:'}</strong> {word.culturalNote}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
