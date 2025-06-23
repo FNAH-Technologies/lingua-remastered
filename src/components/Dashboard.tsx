@@ -28,31 +28,40 @@ const Dashboard = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
+        <div className="w-16 h-16 relative">
+          <div className="absolute inset-0 rounded-full border-4 border-orange-200"></div>
+          <div className="absolute inset-0 rounded-full border-4 border-orange-500 border-t-transparent animate-spin"></div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 scroll-ios">
       <DashboardHeader streak={streak} xp={xp} level={level} />
 
-      <div className="px-4 pb-4 pt-2 space-y-4">
+      <div className="px-4 pb-20 pt-2 space-y-6 animate-ios-fade-in">
         {/* Enhanced Stats Overview */}
-        <EnhancedStatsOverview 
-          streak={streak} 
-          xp={xp} 
-          level={level}
-          weeklyGoal={350}
-          completedLessons={24}
-          studyTime={180}
-        />
+        <div className="animate-ios-slide-up" style={{ animationDelay: '0.1s' }}>
+          <EnhancedStatsOverview 
+            streak={streak} 
+            xp={xp} 
+            level={level}
+            weeklyGoal={350}
+            completedLessons={24}
+            studyTime={180}
+          />
+        </div>
 
         {/* Main Learning Path */}
-        <MainContent />
+        <div className="animate-ios-slide-up" style={{ animationDelay: '0.2s' }}>
+          <MainContent />
+        </div>
 
         {/* Quick Actions */}
-        <QuickActions />
+        <div className="animate-ios-slide-up" style={{ animationDelay: '0.3s' }}>
+          <QuickActions />
+        </div>
       </div>
     </div>
   );

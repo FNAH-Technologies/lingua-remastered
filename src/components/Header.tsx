@@ -24,23 +24,23 @@ const Header = ({ title, showBack = false, showSettings = false, onBack, classNa
   };
 
   return (
-    <div className={`flex items-center justify-between p-4 bg-white/80 backdrop-blur-sm border-b border-gray-100 ${className}`}>
+    <div className={`flex items-center justify-between p-4 glass-ios border-b border-white/20 safe-top ${className}`}>
       <div className="flex items-center space-x-3">
         {showBack && (
           <Button 
             variant="ghost" 
             size="sm" 
             onClick={handleBack}
-            className="p-2"
+            className="p-3 rounded-full hover:bg-white/20 active:scale-95 transition-all duration-200 ripple-ios"
           >
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="w-5 h-5" strokeWidth={2.5} />
           </Button>
         )}
         
         <LogoBubble size="sm" showBubbles={false} />
         
         {title && (
-          <h1 className="text-lg font-semibold text-gray-800">{title}</h1>
+          <h1 className="text-xl font-semibold text-gray-800 tracking-tight">{title}</h1>
         )}
       </div>
 
@@ -49,9 +49,9 @@ const Header = ({ title, showBack = false, showSettings = false, onBack, classNa
           variant="ghost" 
           size="sm" 
           onClick={() => navigate('/settings')}
-          className="p-2"
+          className="p-3 rounded-full hover:bg-white/20 active:scale-95 transition-all duration-200 ripple-ios"
         >
-          <Settings className="w-5 h-5" />
+          <Settings className="w-5 h-5" strokeWidth={2.5} />
         </Button>
       )}
     </div>
