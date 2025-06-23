@@ -1,6 +1,6 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { BookOpen, Play, Map } from 'lucide-react';
+import { BookOpen, Play, Map, Globe, Users, MessageCircle } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import EnhancedProgressTree from '../EnhancedProgressTree';
 import DuolingoProgressTree from '../DuolingoProgressTree';
@@ -18,19 +18,19 @@ const MainContent = () => {
               <div className="flex items-center space-x-3 mb-3">
                 <button className="text-white/80 hover:text-white">←</button>
                 <h2 className="text-xl font-bold">
-                  {language === 'fr' ? 'Mes cours' : 'My courses'}
+                  {language === 'fr' ? 'Mes cours ethniques' : 'My ethnic courses'}
                 </h2>
               </div>
               <div className="flex items-center space-x-6 text-sm">
                 <div className="flex items-center space-x-2">
                   <div className="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center">
-                    <BookOpen className="w-4 h-4" />
+                    <Globe className="w-4 h-4" />
                   </div>
-                  <span>12 {language === 'fr' ? 'Sujets' : 'Subjects'}</span>
+                  <span>8 {language === 'fr' ? 'Langues' : 'Languages'}</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <div className="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center">
-                    <Play className="w-4 h-4" />
+                    <BookOpen className="w-4 h-4" />
                   </div>
                   <span>43 {language === 'fr' ? 'Leçons' : 'Lessons'}</span>
                 </div>
@@ -38,7 +38,7 @@ const MainContent = () => {
             </div>
             <div className="w-16 h-16 bg-white/20 rounded-3xl flex items-center justify-center">
               <div className="w-12 h-12 bg-blue-500 rounded-2xl flex items-center justify-center">
-                <span className="text-white text-xl">🎓</span>
+                <span className="text-white text-xl">🌍</span>
               </div>
             </div>
           </div>
@@ -51,22 +51,22 @@ const MainContent = () => {
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-bold">
-                {language === 'fr' ? 'Géométrie créative' : 'Creative geometry'}
+                {language === 'fr' ? 'Ewondo Traditionnel' : 'Traditional Ewondo'}
               </h3>
               <button className="w-8 h-8 bg-white/20 rounded-xl flex items-center justify-center">
-                <Play className="w-4 h-4" />
+                <MessageCircle className="w-4 h-4" />
               </button>
             </div>
             <div className="flex items-center space-x-2 text-sm opacity-90 mb-3">
               <div className="flex -space-x-2">
-                <div className="w-6 h-6 bg-blue-500 rounded-full border-2 border-gray-800"></div>
-                <div className="w-6 h-6 bg-green-500 rounded-full border-2 border-gray-800"></div>
+                <div className="w-6 h-6 bg-orange-500 rounded-full border-2 border-gray-800"></div>
+                <div className="w-6 h-6 bg-red-500 rounded-full border-2 border-gray-800"></div>
                 <div className="w-6 h-6 bg-yellow-500 rounded-full border-2 border-gray-800"></div>
               </div>
               <span>+43</span>
             </div>
             <div className="text-xs opacity-75">
-              {language === 'fr' ? 'Créer des approches vers les formes planes' : 'Create approaches to plane shapes'}
+              {language === 'fr' ? 'Apprenez les salutations et expressions du quotidien' : 'Learn greetings and daily expressions'}
             </div>
           </CardContent>
         </Card>
@@ -75,22 +75,22 @@ const MainContent = () => {
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-bold">
-                {language === 'fr' ? 'Découvertes en biologie cellulaire' : 'Discoveries in cell biology'}
+                {language === 'fr' ? 'Cultures et Traditions' : 'Cultures & Traditions'}
               </h3>
               <button className="w-8 h-8 bg-white/20 rounded-xl flex items-center justify-center">
-                <Play className="w-4 h-4" />
+                <Users className="w-4 h-4" />
               </button>
             </div>
             <div className="flex items-center space-x-2 text-sm opacity-90 mb-3">
               <div className="flex -space-x-2">
-                <div className="w-6 h-6 bg-pink-500 rounded-full border-2 border-purple-500"></div>
+                <div className="w-6 h-6 bg-green-500 rounded-full border-2 border-purple-500"></div>
                 <div className="w-6 h-6 bg-orange-500 rounded-full border-2 border-purple-500"></div>
                 <div className="w-6 h-6 bg-cyan-500 rounded-full border-2 border-purple-500"></div>
               </div>
               <span>+12</span>
             </div>
             <div className="text-xs opacity-75">
-              {language === 'fr' ? 'Le microscope au-delà de nous' : 'The microscope beyond us'}
+              {language === 'fr' ? 'Découvrez les richesses culturelles africaines' : 'Discover African cultural heritage'}
             </div>
           </CardContent>
         </Card>
