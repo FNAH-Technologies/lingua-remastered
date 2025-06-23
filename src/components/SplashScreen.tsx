@@ -26,7 +26,7 @@ const SplashScreen = () => {
             {/* Logo with proper sizing to fill the container */}
             <div className="w-20 h-20 relative z-10 flex items-center justify-center">
               <img 
-                src="/lovable-uploads/54bc6f2e-b470-42a0-a685-de2f6c1f6398.png" 
+                src="/-uploads/54bc6f2e-b470-42a0-a685-de2f6c1f6398.png" 
                 alt="Lingua Logo" 
                 className="w-full h-full object-contain filter drop-shadow-sm"
               />

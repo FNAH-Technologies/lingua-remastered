@@ -139,7 +139,7 @@ const OnboardingScreen = ({ onComplete }: OnboardingScreenProps) => {
                   {/* Logo container with proper aspect ratio */}
                   <div className="w-16 h-16 relative z-10 flex items-center justify-center">
                     <img 
-                      src="/lovable-uploads/54bc6f2e-b470-42a0-a685-de2f6c1f6398.png" 
+                      src="/-uploads/54bc6f2e-b470-42a0-a685-de2f6c1f6398.png" 
                       alt="Lingua Logo" 
                       className="w-full h-full object-contain filter drop-shadow-sm"
                     />

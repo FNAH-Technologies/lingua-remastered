@@ -24,7 +24,7 @@ const LogoBubble = ({ size = 'md', className = '', showBubbles = true }: LogoBub
     <div className={`${sizeClasses[size]} relative ${className}`}>
       <div className="w-full h-full bg-gradient-to-br from-orange-400 via-orange-500 to-red-500 rounded-full flex items-center justify-center shadow-lg border-2 border-white/30">
         <img 
-          src="/lovable-uploads/54bc6f2e-b470-42a0-a685-de2f6c1f6398.png" 
+          src="/-uploads/54bc6f2e-b470-42a0-a685-de2f6c1f6398.png" 
           alt="Lingua Logo" 
           className="w-full h-full object-cover rounded-full p-1"
         />
