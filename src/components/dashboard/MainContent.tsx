@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BookOpen, Play, Map, Globe, Users, MessageCircle } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -7,6 +8,10 @@ import CulturalTipCard from '../widgets/CulturalTipCard';
 import CommunityStatsWidget from '../widgets/CommunityStatsWidget';
 import AchievementsWidget from '../widgets/AchievementsWidget';
 import OfflineStatusWidget from '../widgets/OfflineStatusWidget';
+import CulturalStoryWidget from '../widgets/CulturalStoryWidget';
+import AIInsightsWidget from '../widgets/AIInsightsWidget';
+import CulturalMilestonesWidget from '../widgets/CulturalMilestonesWidget';
+import EnhancedAudioWidget from '../widgets/EnhancedAudioWidget';
 
 const MainContent = () => {
   const { language, t } = useLanguage();
@@ -99,26 +104,42 @@ const MainContent = () => {
         </Card>
       </div>
 
-      {/* New Enhanced Widgets Section */}
+      {/* Enhanced Widgets Grid - Row 1 */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Cultural Tip Widget */}
         <div className="animate-ios-slide-up" style={{ animationDelay: '0.4s' }}>
           <CulturalTipCard />
         </div>
-
-        {/* Community Stats Widget */}
         <div className="animate-ios-slide-up" style={{ animationDelay: '0.5s' }}>
           <CommunityStatsWidget />
         </div>
       </div>
 
-      {/* Achievements Widget */}
-      <div className="animate-ios-slide-up" style={{ animationDelay: '0.6s' }}>
+      {/* Enhanced Widgets Grid - Row 2 */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="animate-ios-slide-up" style={{ animationDelay: '0.6s' }}>
+          <CulturalStoryWidget />
+        </div>
+        <div className="animate-ios-slide-up" style={{ animationDelay: '0.7s' }}>
+          <AIInsightsWidget />
+        </div>
+      </div>
+
+      {/* Enhanced Widgets Grid - Row 3 */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="animate-ios-slide-up" style={{ animationDelay: '0.8s' }}>
+          <CulturalMilestonesWidget />
+        </div>
+        <div className="animate-ios-slide-up" style={{ animationDelay: '0.9s' }}>
+          <EnhancedAudioWidget />
+        </div>
+      </div>
+
+      {/* Single Column Widgets */}
+      <div className="animate-ios-slide-up" style={{ animationDelay: '1.0s' }}>
         <AchievementsWidget />
       </div>
 
-      {/* Offline Status Widget */}
-      <div className="animate-ios-slide-up" style={{ animationDelay: '0.7s' }}>
+      <div className="animate-ios-slide-up" style={{ animationDelay: '1.1s' }}>
         <OfflineStatusWidget />
       </div>
 
