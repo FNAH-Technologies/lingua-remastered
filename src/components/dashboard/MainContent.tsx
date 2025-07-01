@@ -1,9 +1,12 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BookOpen, Play, Map, Globe, Users, MessageCircle } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import EnhancedProgressTree from '../EnhancedProgressTree';
 import DuolingoProgressTree from '../DuolingoProgressTree';
+import CulturalTipCard from '../widgets/CulturalTipCard';
+import CommunityStatsWidget from '../widgets/CommunityStatsWidget';
+import AchievementsWidget from '../widgets/AchievementsWidget';
+import OfflineStatusWidget from '../widgets/OfflineStatusWidget';
 
 const MainContent = () => {
   const { language, t } = useLanguage();
@@ -94,6 +97,29 @@ const MainContent = () => {
             </div>
           </CardContent>
         </Card>
+      </div>
+
+      {/* New Enhanced Widgets Section */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Cultural Tip Widget */}
+        <div className="animate-ios-slide-up" style={{ animationDelay: '0.4s' }}>
+          <CulturalTipCard />
+        </div>
+
+        {/* Community Stats Widget */}
+        <div className="animate-ios-slide-up" style={{ animationDelay: '0.5s' }}>
+          <CommunityStatsWidget />
+        </div>
+      </div>
+
+      {/* Achievements Widget */}
+      <div className="animate-ios-slide-up" style={{ animationDelay: '0.6s' }}>
+        <AchievementsWidget />
+      </div>
+
+      {/* Offline Status Widget */}
+      <div className="animate-ios-slide-up" style={{ animationDelay: '0.7s' }}>
+        <OfflineStatusWidget />
       </div>
 
       {/* Enhanced Duolingo-style Progress Tree */}
