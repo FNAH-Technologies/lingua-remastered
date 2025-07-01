@@ -1,9 +1,8 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Download, Wifi, WifiOff, HardDrive, Sync } from 'lucide-react';
+import { Download, Wifi, WifiOff, HardDrive, RefreshCw } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { offlineService, OfflineLesson } from '@/services/offlineService';
 import { toast } from "@/hooks/use-toast";
@@ -233,7 +232,7 @@ const OfflineStatusWidget = () => {
             </>
           ) : (
             <>
-              <Sync className="w-4 h-4 mr-2" />
+              <RefreshCw className="w-4 h-4 mr-2" />
               {language === 'fr' ? 'Synchroniser' : 'Sync Progress'}
             </>
           )}
