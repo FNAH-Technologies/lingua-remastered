@@ -106,20 +106,6 @@ const LoginScreen = ({ onLogin }: LoginScreenProps) => {
             </button>
           </div>
 
-          {/* Quick demo login */}
-          <div className="mt-4 pt-4 border-t">
-            <Button
-              onClick={() => {
-                setEmail('demo@lingua.cm');
-                setPassword('demo123');
-                setTimeout(() => handleSubmit(new Event('submit') as any), 100);
-              }}
-              variant="outline"
-              className="w-full"
-            >
-              Essai démo
-            </Button>
-          </div>
         </CardContent>
       </Card>
     </div>
