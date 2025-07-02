@@ -1,14 +1,18 @@
 
+import { getLanguageData } from './ethnicLanguageData';
+
 export interface AudioContent {
   id: string;
   type: 'pronunciation' | 'story' | 'music' | 'conversation';
   text: string;
   textEwondo: string;
+  textNative?: string;
   audioUrl: string;
   speakerName: string;
   region: string;
   culturalContext: string;
   difficulty: 'beginner' | 'intermediate' | 'advanced';
+  targetLanguage?: string;
 }
 
 export interface MusicContent {
@@ -24,41 +28,103 @@ export interface MusicContent {
 }
 
 class AudioService {
-  private audioContent: AudioContent[] = [
-    {
-      id: '1',
-      type: 'pronunciation',
-      text: 'Good morning, how are you?',
-      textEwondo: 'Mbolo, nga nge be?',
-      audioUrl: '/audio/pronunciation/morning-greeting.mp3',
-      speakerName: 'Mama Akono',
-      region: 'Yaoundé',
-      culturalContext: 'Traditional morning greeting used among Ewondo people',
-      difficulty: 'beginner'
-    },
-    {
-      id: '2',
-      type: 'story',
-      text: 'The legend of the wise tortoise',
-      textEwondo: 'Mvett ve kulu',
-      audioUrl: '/audio/stories/wise-tortoise.mp3',
-      speakerName: 'Elder Mbarga',
-      region: 'Mbalmayo',
-      culturalContext: 'Traditional Ewondo folklore teaching wisdom and patience',
-      difficulty: 'intermediate'
-    },
-    {
-      id: '3',
-      type: 'conversation',
-      text: 'Family dinner conversation',
-      textEwondo: 'Kalara ndap ya dia',
-      audioUrl: '/audio/conversations/family-dinner.mp3',
-      speakerName: 'Family Essi',
-      region: 'Ebolowa',
-      culturalContext: 'Typical family interaction during evening meals',
-      difficulty: 'advanced'
-    }
-  ];
+  private audioContent: AudioContent[] = [];
+  private currentTargetLanguage: string = '';
+
+  constructor() {
+    this.initializeDefaultContent();
+  }
+
+  setTargetLanguage(language: string) {
+    this.currentTargetLanguage = language;
+    this.generateLanguageSpecificContent(language);
+  }
+
+  private initializeDefaultContent() {
+    this.audioContent = [
+      {
+        id: '1',
+        type: 'pronunciation',
+        text: 'Good morning, how are you?',
+        textEwondo: 'Mbolo, nga nge be?',
+        audioUrl: '/audio/pronunciation/morning-greeting.mp3',
+        speakerName: 'Mama Akono',
+        region: 'Yaoundé',
+        culturalContext: 'Traditional morning greeting used among Ewondo people',
+        difficulty: 'beginner'
+      },
+      {
+        id: '2',
+        type: 'story',
+        text: 'The legend of the wise tortoise',
+        textEwondo: 'Mvett ve kulu',
+        audioUrl: '/audio/stories/wise-tortoise.mp3',
+        speakerName: 'Elder Mbarga',
+        region: 'Mbalmayo',
+        culturalContext: 'Traditional Ewondo folklore teaching wisdom and patience',
+        difficulty: 'intermediate'
+      },
+      {
+        id: '3',
+        type: 'conversation',
+        text: 'Family dinner conversation',
+        textEwondo: 'Kalara ndap ya dia',
+        audioUrl: '/audio/conversations/family-dinner.mp3',
+        speakerName: 'Family Essi',
+        region: 'Ebolowa',
+        culturalContext: 'Typical family interaction during evening meals',
+        difficulty: 'advanced'
+      }
+    ];
+  }
+
+  private generateLanguageSpecificContent(selectedLanguage: string) {
+    const languageData = getLanguageData(selectedLanguage);
+    if (!languageData) return;
+
+    // Generate language-specific audio content
+    this.audioContent = [
+      {
+        id: '1',
+        type: 'pronunciation',
+        text: 'Good morning, how are you?',
+        textEwondo: 'Mbolo, nga nge be?',
+        textNative: `${languageData.greetings.goodMorning.text}, ${languageData.greetings.howAreYou.text}`,
+        audioUrl: '/audio/pronunciation/morning-greeting.mp3',
+        speakerName: `Elder from ${languageData.culturalContext.region}`,
+        region: languageData.culturalContext.region,
+        culturalContext: `Traditional morning greeting in ${languageData.language}`,
+        difficulty: 'beginner',
+        targetLanguage: selectedLanguage
+      },
+      {
+        id: '2',
+        type: 'story',
+        text: 'Traditional folk tale',
+        textEwondo: 'Mvett ve kulu',
+        textNative: `Traditional story in ${languageData.language}`,
+        audioUrl: '/audio/stories/folk-tale.mp3',
+        speakerName: `Storyteller from ${languageData.culturalContext.region}`,
+        region: languageData.culturalContext.region,
+        culturalContext: `Traditional ${languageData.language} folklore`,
+        difficulty: 'intermediate',
+        targetLanguage: selectedLanguage
+      },
+      {
+        id: '3',
+        type: 'conversation',
+        text: 'Family conversation',
+        textEwondo: 'Kalara ndap ya dia',
+        textNative: `Family dialogue in ${languageData.language}`,
+        audioUrl: '/audio/conversations/family.mp3',
+        speakerName: `Family from ${languageData.culturalContext.region}`,
+        region: languageData.culturalContext.region,
+        culturalContext: `Typical family interaction in ${languageData.language}`,
+        difficulty: 'advanced',
+        targetLanguage: selectedLanguage
+      }
+    ];
+  }
 
   private musicContent: MusicContent[] = [
     {

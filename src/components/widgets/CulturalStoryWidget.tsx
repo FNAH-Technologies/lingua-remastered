@@ -14,6 +14,15 @@ const CulturalStoryWidget = () => {
   const [stories, setStories] = useState<AudioContent[]>([]);
 
   useEffect(() => {
+    // Get the selected language from onboarding and set it for the audio service
+    const onboardingData = localStorage.getItem('lingua_onboarding');
+    if (onboardingData) {
+      const { language } = JSON.parse(onboardingData);
+      if (language) {
+        audioService.setTargetLanguage(language);
+      }
+    }
+    
     const storyContent = audioService.getAudioContent('story');
     setStories(storyContent);
     if (storyContent.length > 0) {
@@ -95,7 +104,7 @@ const CulturalStoryWidget = () => {
             {currentStory.text}
           </h4>
           <p className="text-lg text-blue-700 font-medium">
-            {currentStory.textEwondo}
+            {currentStory.textNative || currentStory.textEwondo}
           </p>
           <div className="flex items-center justify-center space-x-2">
             <span className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(currentStory.difficulty)}`}>

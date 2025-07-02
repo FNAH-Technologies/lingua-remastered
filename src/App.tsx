@@ -47,6 +47,17 @@ const App = () => {
         setIsAuthenticated(true);
         // Check if onboarding is needed
         setNeedsOnboarding(!onboardingData);
+        
+        // If onboarding is complete, set the target language for lessons
+        if (onboardingData) {
+          const { language } = JSON.parse(onboardingData);
+          if (language) {
+            // Import and set the target language dynamically
+            import('./services/lessonDataService').then(({ lessonDataService }) => {
+              lessonDataService.setTargetLanguage(language);
+            });
+          }
+        }
       }
     }, 2500);
 
@@ -62,6 +73,16 @@ const App = () => {
 
   const handleOnboardingComplete = () => {
     setNeedsOnboarding(false);
+    // Set the target language after onboarding completion
+    const onboardingData = localStorage.getItem('lingua_onboarding');
+    if (onboardingData) {
+      const { language } = JSON.parse(onboardingData);
+      if (language) {
+        import('./services/lessonDataService').then(({ lessonDataService }) => {
+          lessonDataService.setTargetLanguage(language);
+        });
+      }
+    }
   };
 
   if (isLoading) {
