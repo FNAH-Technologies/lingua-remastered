@@ -42,12 +42,12 @@ const OnboardingScreen = ({ onComplete }: OnboardingScreenProps) => {
       icon: Users,
       content: (
         <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder={t('onboarding.language.placeholder')} />
+          <SelectTrigger className="w-full h-12 text-lg border-2 border-orange-200 focus:border-orange-500 transition-colors">
+            <SelectValue placeholder="Choisissez votre langue ethnique" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="max-h-60">
             {languages.map((lang) => (
-              <SelectItem key={lang} value={lang}>
+              <SelectItem key={lang} value={lang} className="text-lg py-3">
                 {lang}
               </SelectItem>
             ))}
@@ -105,6 +105,7 @@ const OnboardingScreen = ({ onComplete }: OnboardingScreenProps) => {
   };
 
   const canProceed = () => {
+    // Make language selection optional for better UX
     if (currentSlide === 1) return selectedLanguage !== '';
     return true;
   };
@@ -182,21 +183,28 @@ const OnboardingScreen = ({ onComplete }: OnboardingScreenProps) => {
               variant="outline"
               onClick={prevSlide}
               disabled={currentSlide === 0}
-              className="flex items-center space-x-2"
+              className="flex items-center space-x-2 px-4 py-2"
             >
               <ChevronLeft className="w-4 h-4" />
-              <span>{t('common.back')}</span>
+              <span>Retour</span>
             </Button>
 
             <Button
               onClick={nextSlide}
               disabled={!canProceed()}
-              className="bg-lingua-gradient hover:opacity-90 text-white flex items-center space-x-2"
+              className="bg-lingua-gradient hover:opacity-90 text-white flex items-center space-x-2 px-6 py-3 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 min-w-[120px]"
             >
-              <span>{currentSlide === slides.length - 1 ? t('common.start') : t('common.next')}</span>
-              <ChevronRight className="w-4 h-4" />
+              <span>{currentSlide === slides.length - 1 ? 'Commencer' : 'Suivant'}</span>
+              <ChevronRight className="w-5 h-5" />
             </Button>
           </div>
+          
+          {/* Language selection hint */}
+          {currentSlide === 1 && !selectedLanguage && (
+            <p className="text-sm text-orange-600 mt-4 text-center">
+              Sélectionnez une langue pour continuer
+            </p>
+          )}
         </CardContent>
       </Card>
     </div>
