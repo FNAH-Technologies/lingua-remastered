@@ -41,16 +41,28 @@ const SplashScreen = () => {
 
         {/* App Title */}
         {showTitle && (
-          <h1 className="text-5xl font-bold animate-slide-up">
+          <h1 className="text-6xl font-bold animate-slide-up text-white drop-shadow-lg">
             Lingua
           </h1>
         )}
 
         {/* Subtitle */}
         {showSubtitle && (
-          <p className="text-xl opacity-90 animate-slide-up">
+          <p className="text-2xl font-medium text-white/95 animate-slide-up drop-shadow-md">
             Découvrez les langues du Cameroun
           </p>
+        )}
+
+        {/* Welcome message for new visitors */}
+        {showSubtitle && (
+          <div className="mt-6 animate-slide-up">
+            <p className="text-lg text-white/90 font-medium mb-2 drop-shadow-sm">
+              Bienvenue dans votre voyage linguistique
+            </p>
+            <p className="text-base text-white/80 drop-shadow-sm">
+              Apprenez les langues ethniques du Cameroun de manière interactive
+            </p>
+          </div>
         )}
 
         {/* Loading indicator */}
